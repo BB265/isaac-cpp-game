@@ -42,6 +42,7 @@
 
 # Ignore Visual Studio user-specific files
 .vs/
+.vscode/
 
 # Ignore build
 build/
