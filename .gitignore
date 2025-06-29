@@ -42,3 +42,6 @@
 
 # Ignore Visual Studio user-specific files
 .vs/
+
+# Ignore build
+build/
