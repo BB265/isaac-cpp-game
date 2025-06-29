@@ -1,6 +1,6 @@
 // common/Direction.h
 
-#program once
+#pragma once
 
 enum class Direction {
 	None      = 0,
