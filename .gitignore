@@ -45,3 +45,9 @@
 
 # Ignore build
 build/
+
+# Ignore user presets
+CMakeUserPresets.json
+
+# Ignore vcpkg
+vcpkg_installed/
