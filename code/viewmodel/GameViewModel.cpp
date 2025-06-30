@@ -17,7 +17,7 @@ void GameViewModel::startNewGame() {
 
     // 2. 初始化状态
     m_player.setX(400);  // 玩家初始位置x
-	m_player.setY(300);  // 玩家初始位置y
+    m_player.setY(300);  // 玩家初始位置y
     m_player.setSpeed(5);  // 玩家初始速度
     m_player.setHealth(5);  // 玩家初始血量
 
@@ -30,7 +30,7 @@ void GameViewModel::startNewGame() {
     */
 
     // 4. 发布一个“游戏开始”的事件
-     Subject::notify(GameEvent::GAME_STARTED);
+    notify(GameEvent::GAME_STARTED);
 }
 
 void GameViewModel::update() {

@@ -3,12 +3,15 @@
 
 #include "../common/Commands.h"
 #include "../common/EventSystem.h"
+#include "../common/Direction.h"
+#include "../common/MetaData.h"
 #include "../entity/player.h"
 #include "../entity/enemy.h"
+#include "../common/EventSystem.h"
 #include <vector>
 #include <memory>
 
-class GameViewModel {
+class GameViewModel : public Subject {
 public:
     GameViewModel();
 	void startNewGame();  // 开始新游戏，重置所有状态，生成实体
