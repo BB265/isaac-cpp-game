@@ -15,7 +15,7 @@ public:
     // move
     void setDirection(Direction direction);
     Direction getDirection() const { return direction_; }
-    void setSpeed(int speed) { speed_ = speed; }
+    void setSpeed(int speed);
     int getSpeed() const { return speed_; }
     bool isMoving() const { return direction_ != Direction::None; }
 
@@ -23,6 +23,7 @@ public:
     void setHealth(int health) { health = health; }
     int getHealth() const { return health; }
     void changeHealth(int delta) { health += delta; }
+    bool isAlive() const { return health > 0; }
 
     // attack
     void setDamage(int damage) { damage = damage; }
