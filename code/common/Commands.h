@@ -18,6 +18,6 @@ using MoveCommand = std::function<void(Direction)>;
 
 /**
  * @brief 射击命令类型
- * @param sf::Vector2f 射击方向
+ * @param Direction 射击方向
  */
-using ShootCommand = std::function<void(sf::Vector2f)>;
+using ShootCommand = std::function<void(Direction)>;
