@@ -21,6 +21,7 @@ GameViewModel::GameViewModel()
 
 		notify(GameEvent::PLAY_SOUND_SHOOT);
     };
+
 }
 
 void GameViewModel::startNewGame() {
