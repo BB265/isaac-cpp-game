@@ -18,6 +18,7 @@ gamewindow::gamewindow(GameViewModel& vm) :m_viewModel(vm),isaac_sprite(normal_t
 
     
     tears_sprite= createSprite("../code/assets/tear.png", tears_Texture);
+    tears_sprite.setScale(sf::Vector2f(0.2f, 0.2f));
 }
 void gamewindow::draw_and_display() {
     window.draw(background_sprite);
@@ -103,7 +104,7 @@ void gamewindow::run() {
         dir = judgeDirection(dir_up, dir_right);
         sdir = judgeDirection(shoot_up, shoot_right);
         m_viewModel.moveCommand(dir);
-        m_viewModel.shootCommand(sdir);
+        if(sdir!=Direction::None)m_viewModel.shootCommand(sdir);
         m_viewModel.update();
         draw_and_display();
     }
