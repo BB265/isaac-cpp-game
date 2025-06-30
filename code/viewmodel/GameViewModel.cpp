@@ -16,7 +16,8 @@ void GameViewModel::startNewGame() {
     m_enemies.clear();
 
     // 2. 初始化状态
-    m_player.setPosition(400, 300);  // 玩家初始位置
+    m_player.setX(400);  // 玩家初始位置x
+	m_player.setY(300);  // 玩家初始位置y
     m_player.setSpeed(5);  // 玩家初始速度
     m_player.setHealth(5);  // 玩家初始血量
 
@@ -28,7 +29,7 @@ void GameViewModel::startNewGame() {
     m_enemies.emplace_back(700, 500, 2);
     */
 
-    // 4. (可选) 发布一个“游戏开始”或“关卡加载完毕”的事件
+    // 4. 发布一个“游戏开始”的事件
      Subject::notify(GameEvent::GAME_STARTED);
 }
 
