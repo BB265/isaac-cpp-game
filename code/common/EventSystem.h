@@ -9,6 +9,7 @@
  * @brief 游戏事件枚举
  */
 enum class GameEvent {
+	GAME_STARTED,
     PLAYER_DIED,
     ENEMY_KILLED,
     ITEM_PICKED_UP,
