@@ -9,11 +9,24 @@ GameViewModel::GameViewModel()
         m_player.setDirection(dir);
     };
 
+    shootCommand = [this](Direction dir) {
+        m_bullets.emplace_back(
+            m_player.getX(),
+            m_player.getY(),
+            &m_player,
+            1,  // 子弹伤害
+            10, // 子弹速度
+            dir
+		);
+
+		notify(GameEvent::PLAY_SOUND_SHOOT);
+    };
 }
 
 void GameViewModel::startNewGame() {
     // 1. 清空之前状态
     m_enemies.clear();
+	m_bullets.clear();
 
     // 2. 初始化状态
     m_player.setX(400);  // 玩家初始位置x
@@ -34,14 +47,27 @@ void GameViewModel::startNewGame() {
 }
 
 void GameViewModel::update() {
+	// 1. 更新玩家状态
     m_player.update();
 
-    // TODO: 未来在这里遍历并更新所有敌人和子弹的状态
-    // for (auto& enemy : m_enemies) {
-    //     enemy.update();
-    // }
+	// 2. 更新敌人状态
+    for (auto& enemy : m_enemies) {
+        enemy.update();
+    }
 
-    // TODO: 在这里执行碰撞检测等其他游戏逻辑
+	// 3. 更新子弹状态
+    for (auto& bullet : m_bullets) {
+        bullet.update();
+	}
+
+    m_bullets.erase(
+        std::remove_if(m_bullets.begin(), m_bullets.end(),
+            [](const Bullet& p) {
+                return !p.isValid();
+            }),
+        m_bullets.end()
+    );
+
 }
 
 const Player& GameViewModel::getPlayer() const {
@@ -50,4 +76,8 @@ const Player& GameViewModel::getPlayer() const {
 
 const std::vector<Enemy>& GameViewModel::getEnemies() const {
     return m_enemies;
+}
+
+const std::vector<Bullet>& GameViewModel::getBullets() const {
+    return m_bullets;
 }
