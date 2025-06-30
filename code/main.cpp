@@ -9,6 +9,7 @@ int main() {
 	gamewindow gameview(gameViewModel);
 
 	gameViewModel.startNewGame();
+	gameview.run();
     
 	return 0;
 }
