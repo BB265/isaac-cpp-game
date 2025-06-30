@@ -31,3 +31,8 @@ void Player::setDirection(Direction direction) {
         setVy(0);
     }
 }
+
+void Player::setSpeed(int speed) {
+    speed_ = speed;
+    setDirection(direction_);
+}

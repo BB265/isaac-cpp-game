@@ -11,8 +11,8 @@ GameViewModel::GameViewModel()
 
     shootCommand = [this](Direction dir) {
         m_bullets.emplace_back(
-            m_player.getX(),
-            m_player.getY(),
+            (m_player.getX()+20),
+            (m_player.getY()+20),
             &m_player,
             1,  // 子弹伤害
             10, // 子弹速度

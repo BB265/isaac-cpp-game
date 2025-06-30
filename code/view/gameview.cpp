@@ -18,6 +18,7 @@ gamewindow::gamewindow(GameViewModel& vm) :m_viewModel(vm),isaac_sprite(normal_t
 
     
     tears_sprite= createSprite("../code/assets/tear.png", tears_Texture);
+    tears_sprite.setScale(sf::Vector2f(0.2f, 0.2f));
 }
 void gamewindow::draw_and_display() {
     window.draw(background_sprite);
@@ -30,7 +31,15 @@ void gamewindow::draw_and_display() {
         heart_sprite.setPosition({ 10.f + i * 30.f, 30.f }); 
         window.draw(heart_sprite);
     }
-    //undone
+    //draw enemys
+    const auto& enemies = m_viewModel.getEnemies();
+    for (auto p : enemies) {
+        draw_enymy(p.getX(), p.getY());
+    }
+    const auto& tears = m_viewModel.getBullets();
+    for (auto p : tears) {
+        draw_tears(p.getX(), p.getY());
+    }
     window.display();
 }
 sf::Sprite gamewindow::createSprite(const std::string& filepath, sf::Texture& texture) {
@@ -58,7 +67,9 @@ void gamewindow::run() {
     {
         window.clear();
         Direction dir = Direction::None;
+        Direction sdir = Direction::None;
         int dir_up=1, dir_right=1;
+        int shoot_up = 1, shoot_right = 1;
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
@@ -78,8 +89,22 @@ void gamewindow::run() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
             dir_right += 1;
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            shoot_up += 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            shoot_up -= 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+            shoot_right -= 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+            shoot_right += 1;
+        }
         dir = judgeDirection(dir_up, dir_right);
+        sdir = judgeDirection(shoot_up, shoot_right);
         m_viewModel.moveCommand(dir);
+        if(sdir!=Direction::None)m_viewModel.shootCommand(sdir);
         m_viewModel.update();
         draw_and_display();
     }
