@@ -1,3 +1,4 @@
+#include "common/MetaData.h"
 #pragma once
 
 class Entity {
@@ -5,6 +6,18 @@ public:
     virtual void update() {
         x_ += vx_;
         y_ += vy_;
+        if (x_ < ROOM_LEFT) {
+            x_ = ROOM_LEFT;
+        }
+        if (x_ > ROOM_RIGHT) {
+            x_ = ROOM_RIGHT;
+        }
+        if (y_ < ROOM_TOP) {
+            y_ = ROOM_TOP;
+        }
+        if (y_ > ROOM_BPTTOM) {
+            y_ = ROOM_BPTTOM;
+        }
     }
     virtual ~Entity() = default;
     Entity(int x, int y) : x_(x), y_(y) {}

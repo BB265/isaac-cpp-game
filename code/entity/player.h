@@ -15,7 +15,7 @@ public:
     // move
     void setDirection(Direction direction);
     Direction getDirection() const { return direction_; }
-    void changeSpeed(int delta);
+    void setSpeed(int speed) { speed_ = speed; }
     int getSpeed() const { return speed_; }
     bool isMoving() const { return direction_ != Direction::None; }
 
