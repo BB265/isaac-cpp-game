@@ -4,7 +4,7 @@
 
 #include <functional>
 #include "Direction.h"
-
+#include<SFML/Graphics.hpp>
 /**
  * @brief 简单命令类型
  */

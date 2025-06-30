@@ -96,7 +96,11 @@ void gamewindow::run() {
                 }
                 m_viewModel.moveCommand(dir);
             }
+            else if (const auto* KeyReleased = event->getIf<sf::Event::KeyReleased>()) {
+                m_viewModel.moveCommand(Direction::None);
+            }
         }
+       
         m_viewModel.update();
         draw_and_display();
     }

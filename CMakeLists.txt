@@ -6,13 +6,13 @@ find_package(SFML REQUIRED
     COMPONENTS Graphics Audio
 )
 
-add_executable(isaac_game
-    code/main.cpp
-    # 把你所有的 .cpp 源文件都列在这里
-    code/view/gameview.cpp
-    # viewmodel/GameViewModel.cpp
- "code/view/gameview.h" "code/common/MetaData.h")
-
+file(GLOB SOURCES 
+    "code/*.cpp" 
+    "code/view/*.cpp"
+    "code/entity/*.cpp"
+    "code/viewmodel/*.cpp"
+)
+add_executable(isaac_game ${SOURCES})
 # 为你的项目添加包含目录
 target_include_directories(isaac_game PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/code
