@@ -30,8 +30,8 @@ public:
         if (y_ < ROOM_TOP) {
             y_ = ROOM_TOP;
         }
-        if (y_ > ROOM_BPTTOM) {
-            y_ = ROOM_BPTTOM;
+        if (y_ > ROOM_BOTTOM) {
+            y_ = ROOM_BOTTOM;
         }
     }
 
