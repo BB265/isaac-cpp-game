@@ -10,9 +10,9 @@ class gamewindow {
 private:
 	int heart_count;
 	sf::Texture normal_texture;
-	sf::Texture backgroundTexture;
-	sf::Texture characterTexture;
-	sf::Texture heartTexture;
+	sf::Texture background_Texture;
+	sf::Texture character_Texture;
+	sf::Texture heart_Texture;
 	sf::Texture enemy_Texture;
 	sf::Texture tears_Texture;
 public:
@@ -20,12 +20,13 @@ public:
 	sf::Sprite isaac_sprite;
 	sf::Sprite enemy_sprite;
 	sf::Sprite tears_sprite;
-	sf::Sprite backgroundSprite;
+	sf::Sprite background_sprite;
 	sf::Sprite heart_sprite;
 	gamewindow();
 	void draw_and_display();
 	sf::Sprite createSprite(const std::string& filepath, sf::Texture& texture);
 	void setposition(sf::Sprite& sprite, sf::Vector2f position);
+	void set_isaac_position(int x, int y);
 	void set_heartcount(int count);
 };
 #endif
