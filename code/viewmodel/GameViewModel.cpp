@@ -10,6 +10,8 @@ GameViewModel::GameViewModel()
     };
 
     shootCommand = [this](Direction dir) {
+        if(m_player.atCoolDown()) return;
+
         m_bullets.emplace_back(
             (m_player.getX()+20),
             (m_player.getY()+20),
