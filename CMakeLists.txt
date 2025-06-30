@@ -17,7 +17,9 @@ add_executable(isaac_game
 target_include_directories(isaac_game PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/code
     ${CMAKE_CURRENT_SOURCE_DIR}/code/view
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/code/entity
+    ${CMAKE_CURRENT_SOURCE_DIR}/code/common
+    ${CMAKE_CURRENT_SOURCE_DIR}/code/viewmodel
 )
 
 target_link_libraries(isaac_game PRIVATE 

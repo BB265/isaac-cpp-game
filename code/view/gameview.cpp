@@ -97,6 +97,7 @@ void gamewindow::run() {
                 m_viewModel.moveCommand(dir);
             }
         }
+        m_viewModel.update();
         draw_and_display();
     }
 }
