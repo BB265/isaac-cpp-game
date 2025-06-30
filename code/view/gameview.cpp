@@ -2,7 +2,6 @@
 gamewindow::gamewindow() :isaac_sprite(normal_texture),enemy_sprite(normal_texture), tears_sprite(normal_texture), background_sprite(normal_texture), heart_sprite(normal_texture) {
     window = sf::RenderWindow(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Isaac Game");
     background_sprite = createSprite("../code/assets/room.png", background_Texture);
-
     // load texture and sprite
     
     isaac_sprite = createSprite("../code/assets/isaac.png", character_Texture);
@@ -21,7 +20,6 @@ gamewindow::gamewindow() :isaac_sprite(normal_texture),enemy_sprite(normal_textu
     tears_sprite= createSprite("../code/assets/tear.png", tears_Texture);
 }
 void gamewindow::draw_and_display() {
-    window.clear();
     window.draw(background_sprite);
     window.draw(isaac_sprite);
 
@@ -48,3 +46,15 @@ void gamewindow::set_heartcount(int count) {
 void gamewindow::set_isaac_position(int x, int y) {
     setposition(isaac_sprite, sf::Vector2f(x, y));
 }
+void gamewindow::clear() {
+    window.clear();
+}
+void gamewindow::draw_enymy(int x, int y) {
+    setposition(enemy_sprite, sf::Vector2f(x, y));
+    window.draw(enemy_sprite);
+}
+void gamewindow::draw_tears(int x, int y) {
+    setposition(tears_sprite, sf::Vector2f(x, y));
+    window.draw(tears_sprite);
+}
+
