@@ -31,5 +31,6 @@ public:
 	void set_isaac_position(int x, int y);
 	void draw_enymy(int x, int y);
 	void draw_tears(int x, int y);
+	Direction judgeDirection(int up, int right);
 };
 #endif

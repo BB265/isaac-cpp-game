@@ -58,50 +58,34 @@ void gamewindow::run() {
     {
         window.clear();
         Direction dir = Direction::None;
+        int dir_up=1, dir_right=1;
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
             }
-            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
-            {
-                if (keyPressed->scancode == sf::Keyboard::Scancode::W) {
-                    //W
-                    dir = Direction::Up;
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::S) {
-                    //S
-                    dir = Direction::Down;
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::A) {
-                    //A
-                    dir = Direction::Left;
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::D) {
-                    //D
-                    dir = Direction::Right;
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Up) {
-                    //shoot up
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Down) {
-                    //shoot down
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Left) {
-                    //shoot left
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Right) {
-                    //shoot right
-                }
-                m_viewModel.moveCommand(dir);
-            }
-            else if (const auto* KeyReleased = event->getIf<sf::Event::KeyReleased>()) {
-                m_viewModel.moveCommand(Direction::None);
-            }
         }
-       
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+            dir_up += 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+            dir_up -= 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            dir_right -= 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+            dir_right += 1;
+        }
+        dir = judgeDirection(dir_up, dir_right);
+        m_viewModel.moveCommand(dir);
         m_viewModel.update();
         draw_and_display();
     }
+}
+Direction gamewindow::judgeDirection(int up, int right) {
+    int value = 3 * right + up;
+    if (value > 8)return Direction::None;
+    return static_cast<Direction>(value);
 }
