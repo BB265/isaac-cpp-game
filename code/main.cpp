@@ -1,8 +1,15 @@
 #include <iostream>
 #include"view/gameview.h"
+#include "viewmodel/GameViewModel.h"
 #include<optional>
 int main() {
-	gamewindow gameview;
+
+	GameViewModel gameViewModel;
+
+	gamewindow gameview(gameViewModel);
+
+	gameViewModel.startNewGame();
+
 	sf::RenderWindow& current_window = gameview.window;
     while (current_window.isOpen())
     {   
