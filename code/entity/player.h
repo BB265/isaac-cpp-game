@@ -3,6 +3,7 @@
 #include "common/Commands.h"
 #include "common/EventSystem.h"
 #include "common/Direction.h"
+#include <SFML/System.hpp>
 
 class Player : public Entity {
 public:
@@ -28,6 +29,9 @@ public:
     // attack
     void setDamage(int damage) { damage = damage; }
     int getDamage() const { return damage; }
+    void setCoolDown(sf::Time coolDown) { coolDown = coolDown; }
+    sf::Time getCoolDown() const { return coolDown; }
+    bool atCoolDown();
 
 private:
     Direction direction_;
@@ -35,4 +39,7 @@ private:
     int maxHealth = 5;
     int health = maxHealth;
     int damage = 1;
+    sf::Clock coolDownClock;
+    sf::Time coolDown = sf::seconds(0.5);
+    sf::Time lastShootTime = sf::Time::Zero;
 };

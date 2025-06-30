@@ -36,3 +36,11 @@ void Player::setSpeed(int speed) {
     speed_ = speed;
     setDirection(direction_);
 }
+
+bool Player::atCoolDown() {
+    if (coolDownClock.getElapsedTime() - lastShootTime >= coolDown) {
+        lastShootTime = coolDownClock.getElapsedTime();
+        return false;
+    }
+    return true;
+}
