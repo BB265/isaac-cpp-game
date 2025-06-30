@@ -10,7 +10,7 @@ public:
     ~Bullet() {}
 
     // validation
-    bool isValid() const { return getX() > ROOM_LEFT && getX() < ROOM_RIGHT && getY() > ROOM_TOP && getY() < ROOM_BPTTOM; }
+    bool isValid() const { return getX() > ROOM_LEFT && getX() < ROOM_RIGHT && getY() > ROOM_TOP && getY() < ROOM_BOTTOM; }
 
 private:
     const Entity* owner_;
