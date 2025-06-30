@@ -7,8 +7,6 @@ public:
         y_ += vy_;
     }
     virtual ~Entity() = default;
-
-protected:
     Entity(int x, int y) : x_(x), y_(y) {}
     int getX() const { return x_; }
     int getY() const { return y_; }

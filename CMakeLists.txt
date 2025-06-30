@@ -11,7 +11,7 @@ add_executable(isaac_game
     # 把你所有的 .cpp 源文件都列在这里
     code/view/gameview.cpp
     # viewmodel/GameViewModel.cpp
- "code/view/gameview.h")
+ "code/view/gameview.h" "code/common/MetaData.h")
 
 # 为你的项目添加包含目录
 target_include_directories(isaac_game PRIVATE 

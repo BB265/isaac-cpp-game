@@ -1,14 +1,14 @@
 #ifndef __GAMEVIEW_H_
 #define __GAMEVIEW_H_
 #include <SFML/Graphics.hpp>
-#include <vector>
-#include <string>
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
-
+#include "viewmodel/GameViewModel.h"
+#include"common/MetaData.h"
+#include"common/Direction.h"
+#include"common/Commands.h"
+#include"common/EventSystem.h"
 class gamewindow {
 private:
-	int heart_count;
+	GameViewModel& m_viewModel;
 	sf::Texture normal_texture;
 	sf::Texture background_Texture;
 	sf::Texture character_Texture;
@@ -22,9 +22,9 @@ private:
 	sf::Sprite heart_sprite;
 public:
 	sf::RenderWindow window;
-	gamewindow();
+	gamewindow(GameViewModel &vm);
 	~gamewindow(){}
-	void clear();
+	void run();
 	void draw_and_display();
 	sf::Sprite createSprite(const std::string& filepath, sf::Texture& texture);
 	void setposition(sf::Sprite& sprite, sf::Vector2f position);

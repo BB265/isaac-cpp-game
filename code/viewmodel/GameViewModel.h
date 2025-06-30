@@ -4,7 +4,7 @@
 #include "../common/Commands.h"
 #include "../common/EventSystem.h"
 #include "../entity/player.h"
-//#include "../entity/enemy.h"
+#include "../entity/enemy.h"
 #include <vector>
 #include <memory>
 
