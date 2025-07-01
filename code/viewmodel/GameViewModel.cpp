@@ -4,26 +4,7 @@
 
 GameViewModel::GameViewModel()
     : m_player(0, 0, 0) {
-
-    moveCommand = [this](Direction dir) {
-        m_player.setDirection(dir);
-    };
-
-    shootCommand = [this](Direction dir) {
-        if(m_player.atCoolDown()) return;
-
-        m_bullets.emplace_back(
-            (m_player.getX()+PLAYER_WIDTH/2-BULLET_WIDTH/2),
-            (m_player.getY()+PLAYER_HEIGHT/2-BULLET_HEIGHT/2),
-            &m_player,
-            1,  // 子弹伤害
-            10, // 子弹速度
-            dir
-		);
-
-		notify(GameEvent::PLAY_SOUND_SHOOT);
-    };
-
+	registerAllCommands();
 }
 
 void GameViewModel::startNewGame() {
@@ -83,4 +64,58 @@ const std::vector<Enemy>& GameViewModel::getEnemies() const {
 
 const std::vector<Bullet>& GameViewModel::getBullets() const {
     return m_bullets;
+}
+
+void GameViewModel::registerCommand(CommandType type, std::shared_ptr<ICommandBase> command) {
+	m_commands[type] = command;
+}
+
+void GameViewModel::executeCommand(CommandType type, const std::any& args) {
+    if(m_commands.find(type) != m_commands.end()) {
+        m_commands[type]->Execute(args);
+    }
+    else {
+        std::cerr << "Command not found: " << static_cast<int>(type) << std::endl;
+	}
+}
+
+void GameViewModel::registerAllCommands() {
+    // MoveCommand
+    registerCommand(
+        CommandType::MoveCommand,
+        std::make_shared<Command<Direction>>(
+            [weak_self = weak_from_this()](Direction dir) {
+                // 尝试将 weak_ptr 提升为 shared_ptr
+                if (auto shared_self = weak_self.lock()) {
+                    shared_self->m_player.setDirection(dir);
+                }
+                else {
+                    std::cout << "GameViewModel is expired." << std::endl;
+                }
+            }));
+    
+	// ShootCommand
+    registerCommand(
+        CommandType::ShootCommand,
+        std::make_shared<Command<Direction>>(
+            [weak_self = weak_from_this()](Direction dir) {
+                if (auto shared_self = weak_self.lock()) {
+					auto& m_player = shared_self->m_player;
+                    if (m_player.atCoolDown()) return;
+
+                    shared_self->m_bullets.emplace_back(
+                        m_player.getX() + 20,
+                        m_player.getY() + 20,
+                        &m_player,
+                        1,  // 子弹伤害
+                        10, // 子弹速度
+                        dir
+                    );
+
+                    shared_self->notify(GameEvent::PLAY_SOUND_SHOOT);
+                }
+                else {
+                    std::cout << "GameViewModel is expired." << std::endl;
+                }
+            }));
 }

@@ -6,14 +6,17 @@
 #include "../common/EventSystem.h"
 #include "../common/Direction.h"
 #include "../common/MetaData.h"
-#include "../entity/player.h"
-#include "../entity/enemy.h"
-#include "../entity/bullet.h"
+#include "../common/entity.h"
+#include "entity/player.h"
+#include "entity/enemy.h"
+#include "entity/bullet.h"
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <unordered_map>
+#include <iostream>
 
-class GameViewModel : public Subject {
+class GameViewModel : public Subject, public std::enable_shared_from_this<GameViewModel> {
 public:
     GameViewModel();
 	void startNewGame();  // 开始新游戏，重置所有状态，生成实体
@@ -21,12 +24,14 @@ public:
     const Player& getPlayer() const;
     const std::vector<Enemy>& getEnemies() const;
 	const std::vector<Bullet>& getBullets() const;
-    MoveCommand moveCommand;  // 通过这个传递玩家移动的指令
-	ShootCommand shootCommand;  // 通过这个传递玩家射击的指令
+	void registerCommand(CommandType type, std::shared_ptr<ICommandBase> command);
+	void executeCommand(CommandType type, const std::any& args);
+	void registerAllCommands();
 
 
 private:
 	Player m_player;  // 玩家实体
 	std::vector<Enemy> m_enemies;  // 敌人实体列表
 	std::vector<Bullet> m_bullets;  // 子弹实体列表
+	std::unordered_map<CommandType, std::shared_ptr<ICommandBase>> m_commands;  // 命令映射表
 };
