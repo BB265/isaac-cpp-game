@@ -26,13 +26,19 @@ public:
 
     void Execute(const std::any& args) override {
         // 将 std::any 转换为 std::tuple<Args...>
-        if (args.type() == typeid(ArgumentsTuple)) {
-            auto tupleArgs = std::any_cast<ArgumentsTuple>(args);
-            // 使用 std::apply 解包 tuple 并调用函数
-            std::apply(m_function, tupleArgs);
+        if constexpr (sizeof...(Args) == 0) {
+            // 如果没有参数，直接调用函数
+            m_function();
         }
         else {
-            throw std::invalid_argument("Invalid argument type for command execution.");
+            if (args.type() == typeid(ArgumentsTuple)) {
+                auto tupleArgs = std::any_cast<ArgumentsTuple>(args);
+                // 使用 std::apply 解包 tuple 并调用函数
+                std::apply(m_function, tupleArgs);
+            }
+            else {
+                throw std::invalid_argument("Invalid argument type for command execution.");
+            }
         }
     }
 
