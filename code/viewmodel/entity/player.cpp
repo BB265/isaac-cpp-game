@@ -49,15 +49,15 @@ void Player::setDirection(Direction direction) {
 
     // 根据方向设置目标速度
     switch (direction) {
-        case Direction::Up:    target_velocity_ = {0, -speed_}; break;
-        case Direction::Down:  target_velocity_ = {0, speed_};  break;
-        case Direction::Left:  target_velocity_ = {-speed_, 0}; break;
-        case Direction::Right: target_velocity_ = {speed_, 0};  break;
-        case Direction::UpLeft: target_velocity_ = {-speed_ / std::sqrt(2), -speed_ / std::sqrt(2)}; break;
-        case Direction::UpRight: target_velocity_ = {speed_ / std::sqrt(2), -speed_ / std::sqrt(2)}; break;
-        case Direction::DownLeft: target_velocity_ = {-speed_ / std::sqrt(2), speed_ / std::sqrt(2)}; break;
-        case Direction::DownRight: target_velocity_ = {speed_ / std::sqrt(2), speed_ / std::sqrt(2)}; break;
-        default:               target_velocity_ = {0, 0};        break;
+        case Direction::Up:    target_velocity_ = {0.0f, -static_cast<float>(speed_)}; break;
+        case Direction::Down:  target_velocity_ = {0.0f, static_cast<float>(speed_)};  break;
+        case Direction::Left:  target_velocity_ = {-static_cast<float>(speed_), 0.0f}; break;
+        case Direction::Right: target_velocity_ = {static_cast<float>(speed_), 0.0f};  break;
+        case Direction::UpLeft: target_velocity_ = {-static_cast<float>(speed_ / sqrt(2)), -static_cast<float>(speed_ / sqrt(2))}; break;
+        case Direction::UpRight: target_velocity_ = {static_cast<float>(speed_ / sqrt(2)), -static_cast<float>(speed_ / sqrt(2))}; break;
+        case Direction::DownLeft: target_velocity_ = {-static_cast<float>(speed_ / sqrt(2)), static_cast<float>(speed_ / sqrt(2))}; break;
+        case Direction::DownRight: target_velocity_ = {static_cast<float>(speed_ / sqrt(2)), static_cast<float>(speed_ / sqrt(2))}; break;
+        default:               target_velocity_ = {0.0f, 0.0f};        break;
     }
 
     ease_f_num_ = 0; // 重置缓动帧数

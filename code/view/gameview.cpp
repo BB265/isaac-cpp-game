@@ -8,15 +8,15 @@ gamewindow::gamewindow() {
             sprites.emplace(p.first, sf::Sprite(p.second));
         }
     }
-    sprites["isaac"].setPosition(sf::Vector2f(400, 300)); // default position
-    sprites["isaac"].setScale(sf::Vector2f(1.5, 1.5));
-    sprites["heart"].setScale(sf::Vector2f(3.f, 3.f ));// set heart scale
-    sprites["half_heart"].setScale(sf::Vector2f(3.f, 3.f));
-    sprites["empty_heart"].setScale(sf::Vector2f(3.f, 3.f));
-    sprites["tear"].setScale(sf::Vector2f(0.4f, 0.4f));
+    sprites.find("isaac")->second.setPosition(sf::Vector2f(400, 300)); // default position
+    sprites.find("isaac")->second.setScale(sf::Vector2f(1.5, 1.5));
+    sprites.find("heart")->second.setScale(sf::Vector2f(3.f, 3.f ));// set heart scale
+    sprites.find("half_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
+    sprites.find("empty_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
+    sprites.find("tear")->second.setScale(sf::Vector2f(0.4f, 0.4f));
 }
 void gamewindow::draw_and_display() {
-    window.draw(sprites["background"]);
+    window.draw(sprites.find("background")->second);
     for (auto p : actors) {
         int x = p->getX(), y = p->getY();
         if (p->getType() == EntityType::Player) {
@@ -36,30 +36,30 @@ void gamewindow::draw_and_display() {
     h = h / 2;
     int i = 0;
     for (; i < h; i++) {
-        sprites["heart"].setPosition({10.f + i * 30.f, 30.f});
-        window.draw(sprites["heart"]);
+        sprites.find("heart")->second.setPosition({10.f + i * 30.f, 30.f});
+        window.draw(sprites.find("heart")->second);
     }
     for (; i < h + hh; i++) {
-        sprites["half_heart"].setPosition({ 10.f + i * 30.f, 30.f });
-        window.draw(sprites["half_heart"]);
+        sprites.find("half_heart")->second.setPosition({ 10.f + i * 30.f, 30.f });
+        window.draw(sprites.find("half_heart")->second);
     }
     for (; i < mh; i++) {
-        sprites["empty_heart"].setPosition({ 10.f + i * 30.f, 30.f });
-        window.draw(sprites["empty_heart"]);
+        sprites.find("empty_heart")->second.setPosition({ 10.f + i * 30.f, 30.f });
+        window.draw(sprites.find("empty_heart")->second);
     }
     window.display();
 }
 void gamewindow::draw_issac(int x, int y) {
-    sprites["issac"].setPosition(sf::Vector2f(x, y));
-    window.draw(sprites["issac"]);
+    sprites.find("issac")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("issac")->second);
 }
 void gamewindow::draw_enemy(int x, int y) {
-    sprites["enemy"].setPosition(sf::Vector2f(x, y));
-    window.draw(sprites["enemy"]);
+    sprites.find("enemy")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("enemy")->second);
 }
 void gamewindow::draw_tears(int x, int y) {
-    sprites["tear"].setPosition(sf::Vector2f(x, y));
-    window.draw(sprites["tear"]);
+    sprites.find("tear")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("tear")->second);
 }
 void gamewindow::run() {
     while (window.isOpen())
