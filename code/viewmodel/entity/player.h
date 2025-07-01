@@ -3,7 +3,6 @@
 #include "common/Commands.h"
 #include "common/EventSystem.h"
 #include "common/Direction.h"
-#include <SFML/System.hpp>
 
 class Player : public Entity {
 public:
@@ -15,9 +14,10 @@ public:
     Direction getDirection() const { return direction_; }
     void setSpeed(int speed);
     int getSpeed() const { return speed_; }
-
+    sf::Vector2f getVelocity() const { return cur_velocity_; }
     bool isMoving() const { return direction_ != Direction::None; }
     void update() override;
+    sf::IntRect getBounds() const override { return sf::IntRect({getX(), getY()}, {PLAYER_WIDTH, PLAYER_HEIGHT}); }
 
     // health
     void setHealth(int health) { health = health; }

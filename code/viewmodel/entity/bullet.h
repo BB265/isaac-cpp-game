@@ -9,14 +9,16 @@ class Bullet : public Entity {
 public:
     Bullet(int x, int y, const Player* owner, int damage, int speed, Direction initial_dir);
     ~Bullet() {}
+    void update() override;
+    sf::IntRect getBounds() const override { return sf::IntRect({getX(), getY()}, {BULLET_WIDTH, BULLET_HEIGHT}); }
 
     // validation
-    bool isValid() const { return getX() > ROOM_LEFT && getX() < ROOM_RIGHT && getY() > ROOM_TOP && getY() < ROOM_BOTTOM; }
+    bool isValid() const { return is_valid_; }
 
 private:
-    const Entity* owner_;
+    const Player* owner_;
     int damage_;
     int speed_;
-    int vx_;
-    int vy_;
+    sf::Vector2f velocity_;
+    bool is_valid_ = true;
 };

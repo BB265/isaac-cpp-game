@@ -11,7 +11,7 @@ void Player::update() {
         float t = static_cast<float>(ease_f_num_) / ease_duration_f_;
         float eased_t = easeOutQuad(t);
 
-        sf::Vector2f cur_velocity_ = start_velocity_ + eased_t * (target_velocity_ - start_velocity_);
+        cur_velocity_ = start_velocity_ + eased_t * (target_velocity_ - start_velocity_);
 
         // 更新坐标
         setX(getX() + static_cast<int>(cur_velocity_.x));
@@ -21,6 +21,23 @@ void Player::update() {
         setX(getX() + target_velocity_.x);
         setY(getY() + target_velocity_.y);
         start_velocity_ = target_velocity_;
+        cur_velocity_ = target_velocity_;
+    }
+
+    // 处理边界
+    if (getX() < ROOM_LEFT) {
+        setX(ROOM_LEFT);
+        cur_velocity_.x = 0;
+    } else if (getX() > ROOM_RIGHT - PLAYER_WIDTH) {
+        setX(ROOM_RIGHT - PLAYER_WIDTH);
+        cur_velocity_.x = 0;
+    }
+    if (getY() < ROOM_TOP) {
+        setY(ROOM_TOP);
+        cur_velocity_.y = 0;
+    } else if (getY() > ROOM_BOTTOM - PLAYER_HEIGHT) {
+        setY(ROOM_BOTTOM - PLAYER_HEIGHT);
+        cur_velocity_.y = 0;
     }
 }
 
@@ -28,6 +45,7 @@ void Player::setDirection(Direction direction) {
     if (direction_ == direction) return; // 同方向不用处理
 
     direction_ = direction;
+    start_velocity_ = cur_velocity_;
 
     // 根据方向设置目标速度
     switch (direction) {
