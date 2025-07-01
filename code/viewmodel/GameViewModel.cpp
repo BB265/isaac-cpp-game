@@ -2,68 +2,65 @@
 
 #include "GameViewModel.h"
 
-GameViewModel::GameViewModel()
-    : m_player(0, 0, 0) {
+GameViewModel::GameViewModel() {
 	registerAllCommands();
 }
 
 void GameViewModel::startNewGame() {
     // 1. 清空之前状态
-    m_enemies.clear();
-	m_bullets.clear();
+	m_entities.clear();
+    m_player_ptr = nullptr;
 
-    // 2. 初始化状态
-    m_player.setX(400);  // 玩家初始位置x
-    m_player.setY(300);  // 玩家初始位置y
-    m_player.setSpeed(5);  // 玩家初始速度
-    m_player.setHealth(5);  // 玩家初始血量
+	// 2. 创建玩家实体
+	auto player = std::make_unique<Player>(400, 300, 5);
+	player->setMaxHealth(6);
+	player->setHealth(6);
+	m_player_ptr = player.get();
+	m_entities.push_back(std::move(player));
 
-    /*
-    // 3. 初始化本关卡的敌人
-    m_enemies.emplace_back(100, 100, 2);
-    m_enemies.emplace_back(700, 100, 2);
-    m_enemies.emplace_back(100, 500, 2);
-    m_enemies.emplace_back(700, 500, 2);
-    */
+	// 3. 创建敌人实体
 
     // 4. 发布一个“游戏开始”的事件
     notify(GameEvent::GAME_STARTED);
 }
 
 void GameViewModel::update() {
-	// 1. 更新玩家状态
-    m_player.update();
-
-	// 2. 更新敌人状态
-    for (auto& enemy : m_enemies) {
-        enemy.update();
+	// 1. 更新实体状态
+    for (auto& entity : m_entities) {
+        entity->update(); // 会自动调用Player, Enemy, Bullet等各自的update方法
     }
 
-	// 3. 更新子弹状态
-    for (auto& bullet : m_bullets) {
-        bullet.update();
-	}
+    // 2. 碰撞检测
 
-    m_bullets.erase(
-        std::remove_if(m_bullets.begin(), m_bullets.end(),
-            [](const Bullet& p) {
-                return !p.isValid();
+	// 3. 删除无效实体
+    m_entities.erase(
+        std::remove_if(m_entities.begin(), m_entities.end(),
+            [](const std::unique_ptr<Entity>& entity) {
+                if (entity->getType() == EntityType::Bullet) {
+                    const Bullet* bullet = static_cast<const Bullet*>(entity.get());
+                    return !bullet->isValid();
+                }
+                return false;
             }),
-        m_bullets.end()
+        m_entities.end()
     );
 
 }
 
-const Player& GameViewModel::getPlayer() const {
-    return m_player;
+const Player* GameViewModel::getPlayer() const {
+    return m_player_ptr;
 }
 
-const std::vector<Enemy>& GameViewModel::getEnemies() const {
-    return m_enemies;
+const std::vector<std::unique_ptr<Entity>>& GameViewModel::getEntities() const {
+    return m_entities;
 }
 
-const std::vector<Bullet>& GameViewModel::getBullets() const {
-    return m_bullets;
+const int GameViewModel::getCurrentHealth() const {
+    return m_player_ptr->getHealth();
+}
+
+const int GameViewModel::getMaxHealth() const {
+    return m_player_ptr->getMaxHealth();
 }
 
 void GameViewModel::registerCommand(CommandType type, std::shared_ptr<ICommandBase> command) {
@@ -79,7 +76,27 @@ void GameViewModel::executeCommand(CommandType type, const std::any& args) {
 	}
 }
 
+GameViewModel::CommandExecutor GameViewModel::getCommand() {
+    return [this](CommandType type, const std::any& args) {
+        this->executeCommand(type, args);
+    };
+}
+
 void GameViewModel::registerAllCommands() {
+    // UpdateCommand
+    registerCommand(
+        CommandType::UpdateCommand,
+        std::make_shared<Command<void>>(
+            [weak_self = weak_from_this()]() {
+                if (auto shared_self = weak_self.lock()) {
+                    shared_self->update();
+                    shared_self->notify(GameEvent::RENDER_FLUSH);
+                }
+                else {
+                    std::cout << "GameViewModel is expired." << std::endl;
+                }
+			}));
+
     // MoveCommand
     registerCommand(
         CommandType::MoveCommand,
@@ -87,7 +104,12 @@ void GameViewModel::registerAllCommands() {
             [weak_self = weak_from_this()](Direction dir) {
                 // 尝试将 weak_ptr 提升为 shared_ptr
                 if (auto shared_self = weak_self.lock()) {
-                    shared_self->m_player.setDirection(dir);
+                    if (shared_self->m_player_ptr) {
+                        shared_self->m_player_ptr->setDirection(dir);
+                    }
+                    else {
+						std::cout << "Player entity is not initialized." << std::endl;
+                    }
                 }
                 else {
                     std::cout << "GameViewModel is expired." << std::endl;
@@ -100,16 +122,20 @@ void GameViewModel::registerAllCommands() {
         std::make_shared<Command<Direction>>(
             [weak_self = weak_from_this()](Direction dir) {
                 if (auto shared_self = weak_self.lock()) {
-					auto& m_player = shared_self->m_player;
-                    if (m_player.atCoolDown()) return;
+                    auto& m_player_ptr = shared_self->m_player_ptr;
+                    if (!m_player_ptr || m_player_ptr->atCoolDown()) {
+                        return;
+                    }
 
-                    shared_self->m_bullets.emplace_back(
-                        m_player.getX() + 20,
-                        m_player.getY() + 20,
-                        &m_player,
-                        1,  // 子弹伤害
-                        10, // 子弹速度
-                        dir
+                    shared_self->m_entities.push_back(
+                        std::make_unique<Bullet>(
+                            m_player_ptr->getX() + 20,
+                            m_player_ptr->getY() + 20,
+                            m_player_ptr,
+                            1,  // 子弹伤害
+                            10, // 子弹速度
+                            dir
+                        )
                     );
 
                     shared_self->notify(GameEvent::PLAY_SOUND_SHOOT);
