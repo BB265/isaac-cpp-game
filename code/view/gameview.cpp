@@ -115,8 +115,6 @@ void gamewindow::onNotify(GameEvent event) {
     switch (event)
     {
     case GameEvent::GAME_STARTED:
-        window.clear();
-        draw_and_display();
         break;
     case GameEvent::RENDER_FLUSH:
         window.clear();

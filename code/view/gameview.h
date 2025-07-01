@@ -24,7 +24,7 @@ public:
 	void draw_issac(int x, int y);
 	void draw_enemy(int x, int y);
 	void draw_tears(int x, int y);
-	void set_actors(const std::vector<std::shared_ptr<Entity>> _actors) {
+	void set_actors(const std::vector<std::shared_ptr<Entity>>& _actors) {
 		actors = _actors;
 	}
 	void set_command(EXCommand func) {

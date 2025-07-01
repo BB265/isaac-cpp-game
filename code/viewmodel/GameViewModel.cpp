@@ -59,7 +59,7 @@ const int* GameViewModel::getCurrentHealth() const {
     if (!m_player_ptr) {
         return nullptr;
     }
-    return &m_player_ptr->getHealth();
+    return &(m_player_ptr->getHealth());
 }
 
 const int* GameViewModel::getMaxHealth() const {
