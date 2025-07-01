@@ -29,9 +29,9 @@ public:
     bool isAlive() const { return health > 0; }
 
     // attack
-    void setDamage(int damage) { damage = damage; }
+    void setDamage(int damage_) { damage = damage_; }
     int getDamage() const { return damage; }
-    void setCoolDown(sf::Time coolDown) { coolDown = coolDown; }
+    void setCoolDown(sf::Time coolDown_) { coolDown = coolDown_; }
     sf::Time getCoolDown() const { return coolDown; }
     bool atCoolDown();
 
