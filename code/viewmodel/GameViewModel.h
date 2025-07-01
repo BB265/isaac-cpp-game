@@ -29,9 +29,9 @@ public:
 	void executeCommand(CommandType type, const std::any& args);
 	EXCommand getCommand();
 	void registerAllCommands();
-	void movecommand(Direction dir);
-	void shootcommand(Direction dir);
-	void updatacommand();
+	void updateCommand();
+	void moveCommand(Direction dir);
+	void shootCommand(Direction dir);
 
 private:
 	std::vector<std::shared_ptr<Entity>> m_entities;

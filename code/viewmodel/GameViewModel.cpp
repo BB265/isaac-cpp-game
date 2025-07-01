@@ -87,17 +87,24 @@ EXCommand GameViewModel::getCommand() {
         this->executeCommand(type, args);
     };
 }
-void GameViewModel::movecommand(Direction dir) {
+
+void GameViewModel::updateCommand() {
+    update();
+    notify(GameEvent::RENDER_FLUSH);
+}
+
+void GameViewModel::moveCommand(Direction dir) {
     m_player_ptr->setDirection(dir);
 }
-void GameViewModel::shootcommand(Direction dir) {
+
+void GameViewModel::shootCommand(Direction dir) {
     if (!m_player_ptr || m_player_ptr->atCoolDown()) {
         return;
     }
     m_entities.push_back(
         std::make_shared<Bullet>(
-            m_player_ptr->getX() + PLAYER_WIDTH/2-BULLET_WIDTH/2,
-            m_player_ptr->getY() + PLAYER_HEIGHT/2-BULLET_HEIGHT/2,
+            m_player_ptr->getX() + PLAYER_WIDTH / 2 - BULLET_WIDTH / 2,
+            m_player_ptr->getY() + PLAYER_HEIGHT / 2 - BULLET_HEIGHT / 2,
             m_player_ptr,
             1,  // 子弹伤害
             10, // 子弹速度
@@ -106,23 +113,20 @@ void GameViewModel::shootcommand(Direction dir) {
     );
     notify(GameEvent::PLAY_SOUND_SHOOT);
 }
-void GameViewModel::updatacommand() {
-    update();
-    notify(GameEvent::RENDER_FLUSH);
-}
+
 void GameViewModel::registerAllCommands() {
     // UpdateCommand
     registerCommand(
         CommandType::UpdateCommand,
-        std::make_shared<Command<>>([this]() { updatacommand(); }));
+        std::make_shared<Command<>>([this]() { updateCommand(); }));
 
     // MoveCommand
     registerCommand(
         CommandType::MoveCommand,
-        std::make_shared<Command<Direction>>([this](Direction dir) { movecommand(dir); }));
+        std::make_shared<Command<Direction>>([this](Direction dir) { moveCommand(dir); }));
 
     // ShootCommand
     registerCommand(
         CommandType::ShootCommand,
-        std::make_shared<Command<Direction>>([this](Direction dir) { shootcommand(dir); }));
+        std::make_shared<Command<Direction>>([this](Direction dir) { shootCommand(dir); }));
 }
