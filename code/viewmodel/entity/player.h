@@ -20,10 +20,10 @@ public:
     sf::IntRect getBounds() const override { return sf::IntRect({getX(), getY()}, {PLAYER_WIDTH, PLAYER_HEIGHT}); }
 
     // health
-    void setHealth(int health) { health = health; }
+    void setHealth(int health_) { health = health_; }
     const int& getHealth() const { return health; }
     void changeHealth(int delta) { health += delta; }
-    void setMaxHealth(int maxHealth) { maxHealth = maxHealth; }
+    void setMaxHealth(int maxHealth_) { maxHealth = maxHealth_; }
     const int& getMaxHealth() const { return maxHealth; }
     void changeMaxHealth(int delta) { maxHealth += delta; }
     bool isAlive() const { return health > 0; }
