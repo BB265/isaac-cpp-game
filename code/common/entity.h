@@ -1,6 +1,7 @@
 #pragma once
 #include "common/MetaData.h"
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/System.hpp>
 
 enum class EntityType {
     Player,
