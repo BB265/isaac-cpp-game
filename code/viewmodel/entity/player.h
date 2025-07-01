@@ -1,5 +1,5 @@
 #pragma once
-#include "entity/entity.h"
+#include "common/entity.h"
 #include "common/Commands.h"
 #include "common/EventSystem.h"
 #include "common/Direction.h"
@@ -7,10 +7,7 @@
 
 class Player : public Entity {
 public:
-    Player(int x, int y, int speed) : Entity(x, y), direction_(Direction::None), speed_(speed) {
-        setVx(0);
-        setVy(0);
-    }
+    Player(int x, int y, int speed) : Entity(x, y, EntityType::Player), direction_(Direction::None), speed_(speed) {}
     ~Player() {}
 
     // move
@@ -18,7 +15,9 @@ public:
     Direction getDirection() const { return direction_; }
     void setSpeed(int speed);
     int getSpeed() const { return speed_; }
+
     bool isMoving() const { return direction_ != Direction::None; }
+    void update() override;
 
     // health
     void setHealth(int health) { health = health; }
@@ -36,6 +35,11 @@ public:
 private:
     Direction direction_;
     int speed_;
+    sf::Vector2f start_velocity_;
+    sf::Vector2f cur_velocity_;
+    sf::Vector2f target_velocity_;
+    int ease_duration_f_ = 50;
+    int ease_f_num_ = 0;
     int maxHealth = 5;
     int health = maxHealth;
     int damage = 1;

@@ -1,12 +1,13 @@
 #pragma once
-#include "entity.h"
+#include "common/entity.h"
+#include "player.h"
 #include "common/Direction.h"
 
 #include <cmath>
 
 class Bullet : public Entity {
 public:
-    Bullet(int x, int y, const Entity* owner, int damage, int speed, Direction initial_dir);
+    Bullet(int x, int y, const Player* owner, int damage, int speed, Direction initial_dir);
     ~Bullet() {}
 
     // validation
@@ -16,4 +17,6 @@ private:
     const Entity* owner_;
     int damage_;
     int speed_;
+    int vx_;
+    int vy_;
 };

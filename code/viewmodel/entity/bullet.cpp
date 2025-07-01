@@ -1,7 +1,7 @@
 #include "entity/bullet.h"
 
 Bullet::Bullet(int x, int y, const Entity* owner, int damage, int speed, Direction initial_dir)
-    : Entity(x, y), owner_(owner), damage_(damage), speed_(speed) {
+    : Entity(x, y, EntityType::Bullet), owner_(owner), damage_(damage), speed_(speed) {
     int vx = 0;
     int vy = 0;
     if (initial_dir == Direction::Up) {
