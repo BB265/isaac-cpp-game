@@ -22,7 +22,7 @@ public:
 	void startNewGame();  // 开始新游戏，重置所有状态，生成实体
     void update();  // 每一帧都要调用，更新所有游戏实体的状态
     const Player* getPlayer() const;
-	const std::vector<std::unique_ptr<Entity>>& getEntities() const;
+	const std::vector<std::shared_ptr<Entity>>& getEntities() const;
 	const int* getCurrentHealth() const;
 	const int* getMaxHealth() const;
 	void registerCommand(CommandType type, std::shared_ptr<ICommandBase> command);
@@ -32,7 +32,7 @@ public:
 
 
 private:
-	std::vector<std::unique_ptr<Entity>> m_entities;
+	std::vector<std::shared_ptr<Entity>> m_entities;
 	Player* m_player_ptr;  // 玩家实体
 
 	std::unordered_map<CommandType, std::shared_ptr<ICommandBase>> m_commands;  // 命令映射表

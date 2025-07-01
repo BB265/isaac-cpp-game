@@ -12,7 +12,7 @@ void GameViewModel::startNewGame() {
     m_player_ptr = nullptr;
 
 	// 2. 创建玩家实体
-	auto player = std::make_unique<Player>(400, 300, 5);
+	auto player = std::make_shared<Player>(400, 300, 5);
 	player->setMaxHealth(6);
 	player->setHealth(6);
 	m_player_ptr = player.get();
@@ -35,7 +35,7 @@ void GameViewModel::update() {
 	// 3. 删除无效实体
     m_entities.erase(
         std::remove_if(m_entities.begin(), m_entities.end(),
-            [](const std::unique_ptr<Entity>& entity) {
+            [](const std::shared_ptr<Entity>& entity) {
                 if (entity->getType() == EntityType::Bullet) {
                     const Bullet* bullet = static_cast<const Bullet*>(entity.get());
                     return !bullet->isValid();
@@ -51,7 +51,7 @@ const Player* GameViewModel::getPlayer() const {
     return m_player_ptr;
 }
 
-const std::vector<std::unique_ptr<Entity>>& GameViewModel::getEntities() const {
+const std::vector<std::shared_ptr<Entity>>& GameViewModel::getEntities() const {
     return m_entities;
 }
 
@@ -92,7 +92,7 @@ void GameViewModel::registerAllCommands() {
     // UpdateCommand
     registerCommand(
         CommandType::UpdateCommand,
-        std::make_shared<Command<void>>(
+        std::make_shared<Command<>>(
             [weak_self = weak_from_this()]() {
                 if (auto shared_self = weak_self.lock()) {
                     shared_self->update();
@@ -134,7 +134,7 @@ void GameViewModel::registerAllCommands() {
                     }
 
                     shared_self->m_entities.push_back(
-                        std::make_unique<Bullet>(
+                        std::make_shared<Bullet>(
                             m_player_ptr->getX() + 20,
                             m_player_ptr->getY() + 20,
                             m_player_ptr,

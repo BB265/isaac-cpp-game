@@ -6,8 +6,15 @@
 #include <tuple>
 #include <iostream>
 #include <string>
+enum class CommandType
+{
+    MoveCommand,
+    ShootCommand,
+    UpdateCommand,
+};
 
 using EXCommand = std::function<void(CommandType, const std::any&)>;
+
 class ICommandBase {
 public:
     virtual ~ICommandBase() = default;
@@ -44,10 +51,4 @@ public:
 
 private:
     CommandFunction m_function;
-};
-enum class CommandType
-{
-    MoveCommand,
-    ShootCommand,
-    UpdateCommand,
 };

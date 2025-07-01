@@ -9,9 +9,9 @@ public:
 		return instance;
 	}
 	void load_texture(const std::string& name, const std::string& path) {
-		sf::Texture texture;
-		texture.loadFromFile(path);
-		m_textures[name] = texture;
+		sf::Texture* texture = new sf::Texture;
+		texture->loadFromFile(path);
+		m_textures[name] = *texture;
 	}
 	const std::map < std::string, sf::Texture >& get_textures() {
 		return m_textures;

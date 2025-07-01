@@ -10,10 +10,10 @@
 #include<memory>
 class gamewindow:public IObserver {
 private:
-	int* health;
-	int* max_health;
+	const int* health;
+	const int* max_health;
 	std::map<std::string, sf::Sprite>sprites;
-	const std::vector<Entity>* actors;
+	std::vector<std::shared_ptr<Entity>> actors;
 	EXCommand excommand;
 public:
 	sf::RenderWindow window;
@@ -24,16 +24,16 @@ public:
 	void draw_issac(int x, int y);
 	void draw_enemy(int x, int y);
 	void draw_tears(int x, int y);
-	void set_actors(const std::vector<Entity>* _actors) {
+	void set_actors(const std::vector<std::shared_ptr<Entity>> _actors) {
 		actors = _actors;
 	}
 	void set_command(EXCommand func) {
 		excommand = func;
 	}
-	void set_health(int* _health) {
+	void set_health(const int* _health) {
 		health = _health;
 	}
-	void set_maxhealth(int* _maxhealth) {
+	void set_maxhealth(const int* _maxhealth) {
 		max_health = _maxhealth;
 	}
 	void onNotify(GameEvent event) override;

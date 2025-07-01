@@ -3,8 +3,10 @@ gamewindow::gamewindow() {
     window = sf::RenderWindow(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Isaac Game");
     window.setFramerateLimit(60);
     const std::map < std::string, sf::Texture > textures = AssetManager::get_instance().get_textures();
-    for (auto p : textures) {
-        sprites[p.first] =sf::Sprite(p.second);
+    for (auto &p : textures) {
+        if (!p.first.empty()) {
+            sprites.emplace(p.first, sf::Sprite(p.second));
+        }
     }
     sprites["isaac"].setPosition(sf::Vector2f(400, 300)); // default position
     sprites["isaac"].setScale(sf::Vector2f(1.5, 1.5));
@@ -15,22 +17,22 @@ gamewindow::gamewindow() {
 }
 void gamewindow::draw_and_display() {
     window.draw(sprites["background"]);
-    for (auto p : *actors) {
-        int x = p.getX(), y = p.getY();
-        if (p.getType() == EntityType::Player) {
+    for (auto p : actors) {
+        int x = p->getX(), y = p->getY();
+        if (p->getType() == EntityType::Player) {
             draw_issac(x, y);
         }
-        else if (p.getType() == EntityType::Enemy) {
+        else if (p->getType() == EntityType::Enemy) {
             draw_enemy(x, y);
         }
-        else if (p.getType() == EntityType::Bullet) {
+        else if (p->getType() == EntityType::Bullet) {
             draw_tears(x, y);
         }
     }
     // draw heart
-    int mh = (*max_health), h = (*health),int hh;
+    int mh = (*max_health), h = (*health);
     mh = mh / 2;
-    hh = h % 2;
+    int hh = h % 2;
     h = h / 2;
     int i = 0;
     for (; i < h; i++) {
@@ -101,7 +103,7 @@ void gamewindow::run() {
         sdir = judgeDirection(shoot_up, shoot_right);
         excommand(CommandType::MoveCommand, std::make_any<std::tuple<Direction>>(dir));
         if(sdir!=Direction::None)excommand(CommandType::ShootCommand, std::make_any<std::tuple<Direction>>(sdir));
-        excommand(CommandType::UpdateCommand, std::make_any<>);
+        excommand(CommandType::UpdateCommand, std::make_any<std::tuple<>>);
     }
 }
 Direction gamewindow::judgeDirection(int up, int right) {
