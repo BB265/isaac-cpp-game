@@ -2,10 +2,10 @@
 gamewindow::gamewindow() {
     window = sf::RenderWindow(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Isaac Game");
     window.setFramerateLimit(60);
-    const std::map < std::string, sf::Texture > textures = AssetManager::get_instance().get_textures();
+    const std::map < std::string, sf::Texture* > textures = AssetManager::get_instance().get_textures();
     for (auto &p : textures) {
         if (!p.first.empty()) {
-            sprites.emplace(p.first, sf::Sprite(p.second));
+            sprites.emplace(p.first, sf::Sprite((*p.second)));
         }
     }
     sprites.find("isaac")->second.setPosition(sf::Vector2f(400, 300)); // default position
@@ -50,8 +50,8 @@ void gamewindow::draw_and_display() {
     window.display();
 }
 void gamewindow::draw_issac(int x, int y) {
-    sprites.find("issac")->second.setPosition(sf::Vector2f(x, y));
-    window.draw(sprites.find("issac")->second);
+    sprites.find("isaac")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("isaac")->second);
 }
 void gamewindow::draw_enemy(int x, int y) {
     sprites.find("enemy")->second.setPosition(sf::Vector2f(x, y));

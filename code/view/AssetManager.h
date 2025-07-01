@@ -2,6 +2,7 @@
 #include<SFML/Graphics.hpp>
 #include<map>
 #include<string>
+#include<stdexcept>
 class AssetManager {
 public:
 	static AssetManager& get_instance() {
@@ -10,10 +11,12 @@ public:
 	}
 	void load_texture(const std::string& name, const std::string& path) {
 		sf::Texture* texture = new sf::Texture;
-		texture->loadFromFile(path);
-		m_textures[name] = *texture;
+		if (!texture->loadFromFile(path)) {
+			throw std::runtime_error("load file fail " + path);
+		}
+		m_textures[name] = texture;
 	}
-	const std::map < std::string, sf::Texture >& get_textures() {
+	const std::map < std::string, sf::Texture* >& get_textures() {
 		return m_textures;
 	}
 	AssetManager(){
@@ -26,5 +29,5 @@ public:
 		load_texture("tear", "../code/assets/tear.png");
 	}
 private:
-	std::map < std::string, sf::Texture > m_textures;
+	std::map < std::string, sf::Texture* > m_textures;
 };
