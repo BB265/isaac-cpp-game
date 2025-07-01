@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 
+using EXCommand = std::function<void(CommandType, const std::any&)>;
 class ICommandBase {
 public:
     virtual ~ICommandBase() = default;

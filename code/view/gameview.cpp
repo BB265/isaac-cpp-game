@@ -1,29 +1,20 @@
 #include"gameview.h"
-gamewindow::gamewindow(GameViewModel& vm) :m_viewModel(vm),isaac_sprite(normal_texture),enemy_sprite(normal_texture), tears_sprite(normal_texture), background_sprite(normal_texture), heart_sprite(normal_texture) {
+gamewindow::gamewindow() {
     window = sf::RenderWindow(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Isaac Game");
     window.setFramerateLimit(60);
-    background_sprite = createSprite("../code/assets/room.png", background_Texture);
-    // load texture and sprite
-    
-    isaac_sprite = createSprite("../code/assets/isaac.png", character_Texture);
-    isaac_sprite.setPosition(sf::Vector2f( 400, 300 )); // default position
-    isaac_sprite.setScale(sf::Vector2f(1.5, 1.5));
-
-    // load heart
-    
-    heart_sprite = createSprite("../code/assets/heart.png", heart_Texture);
-    heart_sprite.setScale(sf::Vector2f(3.f, 3.f )); // set heart scale
-
-    
-    enemy_sprite= createSprite("../code/assets/Champion_Red.png", enemy_Texture);
-
-    
-    tears_sprite= createSprite("../code/assets/tear.png", tears_Texture);
-    tears_sprite.setScale(sf::Vector2f(0.4f, 0.4f));
+    const std::map < std::string, sf::Texture > textures = AssetManager::get_instance().get_textures();
+    for (auto p : textures) {
+        sprites[p.first] =sf::Sprite(p.second);
+    }
+    sprites["isaac"].setPosition(sf::Vector2f(400, 300)); // default position
+    sprites["isaac"].setScale(sf::Vector2f(1.5, 1.5));
+    sprites["heart"].setScale(sf::Vector2f(3.f, 3.f ));// set heart scale
+    sprites["half_heart"].setScale(sf::Vector2f(3.f, 3.f));
+    sprites["empty_heart"].setScale(sf::Vector2f(3.f, 3.f));
+    sprites["tear"].setScale(sf::Vector2f(0.4f, 0.4f));
 }
 void gamewindow::draw_and_display() {
-    window.draw(background_sprite);
-    const Player& player = m_viewModel.getPlayer();
+    window.draw(sprites["background"]);
     set_isaac_position(player.getX(), player.getY());
     window.draw(isaac_sprite);
 
