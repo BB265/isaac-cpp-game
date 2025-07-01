@@ -87,67 +87,42 @@ EXCommand GameViewModel::getCommand() {
         this->executeCommand(type, args);
     };
 }
-
+void GameViewModel::movecommand(Direction dir) {
+    m_player_ptr->setDirection(dir);
+}
+void GameViewModel::shootcommand(Direction dir) {
+    if (!m_player_ptr || m_player_ptr->atCoolDown()) {
+        return;
+    }
+    m_entities.push_back(
+        std::make_shared<Bullet>(
+            m_player_ptr->getX() + PLAYER_WIDTH/2-BULLET_WIDTH/2,
+            m_player_ptr->getY() + PLAYER_HEIGHT/2-BULLET_HEIGHT/2,
+            m_player_ptr,
+            1,  // 子弹伤害
+            10, // 子弹速度
+            dir
+        )
+    );
+    notify(GameEvent::PLAY_SOUND_SHOOT);
+}
+void GameViewModel::updatacommand() {
+    update();
+    notify(GameEvent::RENDER_FLUSH);
+}
 void GameViewModel::registerAllCommands() {
     // UpdateCommand
     registerCommand(
         CommandType::UpdateCommand,
-        std::make_shared<Command<>>(
-            [weak_self = weak_from_this()]() {
-                if (auto shared_self = weak_self.lock()) {
-                    shared_self->update();
-                    shared_self->notify(GameEvent::RENDER_FLUSH);
-                }
-                else {
-                    std::cout << "GameViewModel is expired." << std::endl;
-                }
-			}));
+        std::make_shared<Command<>>([this]() { updatacommand(); }));
 
     // MoveCommand
     registerCommand(
         CommandType::MoveCommand,
-        std::make_shared<Command<Direction>>(
-            [weak_self = weak_from_this()](Direction dir) {
-                // 尝试将 weak_ptr 提升为 shared_ptr
-                if (auto shared_self = weak_self.lock()) {
-                    if (shared_self->m_player_ptr) {
-                        shared_self->m_player_ptr->setDirection(dir);
-                    }
-                    else {
-						std::cout << "Player entity is not initialized." << std::endl;
-                    }
-                }
-                else {
-                    std::cout << "GameViewModel is expired." << std::endl;
-                }
-            }));
-    
-	// ShootCommand
+        std::make_shared<Command<Direction>>([this](Direction dir) { movecommand(dir); }));
+
+    // ShootCommand
     registerCommand(
         CommandType::ShootCommand,
-        std::make_shared<Command<Direction>>(
-            [weak_self = weak_from_this()](Direction dir) {
-                if (auto shared_self = weak_self.lock()) {
-                    auto& m_player_ptr = shared_self->m_player_ptr;
-                    if (!m_player_ptr || m_player_ptr->atCoolDown()) {
-                        return;
-                    }
-
-                    shared_self->m_entities.push_back(
-                        std::make_shared<Bullet>(
-                            m_player_ptr->getX() + 20,
-                            m_player_ptr->getY() + 20,
-                            m_player_ptr,
-                            1,  // 子弹伤害
-                            10, // 子弹速度
-                            dir
-                        )
-                    );
-
-                    shared_self->notify(GameEvent::PLAY_SOUND_SHOOT);
-                }
-                else {
-                    std::cout << "GameViewModel is expired." << std::endl;
-                }
-            }));
+        std::make_shared<Command<Direction>>([this](Direction dir) { shootcommand(dir); }));
 }
