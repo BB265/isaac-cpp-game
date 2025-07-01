@@ -13,8 +13,8 @@ GameViewModel::GameViewModel()
         if(m_player.atCoolDown()) return;
 
         m_bullets.emplace_back(
-            (m_player.getX()+20),
-            (m_player.getY()+20),
+            (m_player.getX()+PLAYER_WIDTH/2-BULLET_WIDTH/2),
+            (m_player.getY()+PLAYER_HEIGHT/2-BULLET_HEIGHT/2),
             &m_player,
             1,  // 子弹伤害
             10, // 子弹速度

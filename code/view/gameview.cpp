@@ -7,6 +7,7 @@ gamewindow::gamewindow(GameViewModel& vm) :m_viewModel(vm),isaac_sprite(normal_t
     
     isaac_sprite = createSprite("../code/assets/isaac.png", character_Texture);
     isaac_sprite.setPosition(sf::Vector2f( 400, 300 )); // default position
+    isaac_sprite.setScale(sf::Vector2f(1.5, 1.5));
 
     // load heart
     
@@ -18,7 +19,7 @@ gamewindow::gamewindow(GameViewModel& vm) :m_viewModel(vm),isaac_sprite(normal_t
 
     
     tears_sprite= createSprite("../code/assets/tear.png", tears_Texture);
-    tears_sprite.setScale(sf::Vector2f(0.2f, 0.2f));
+    tears_sprite.setScale(sf::Vector2f(0.4f, 0.4f));
 }
 void gamewindow::draw_and_display() {
     window.draw(background_sprite);

@@ -2,8 +2,12 @@
 #define __METADATA_H_
 const int WINDOW_WIDTH = 832;
 const int WINDOW_HEIGHT = 520;
-const int ROOM_TOP = 40;
-const int ROOM_BOTTOM =390;
-const int ROOM_LEFT = 50;
-const int ROOM_RIGHT = 720;
+const int ROOM_TOP = 75;
+const int ROOM_BOTTOM =440;
+const int ROOM_LEFT = 75;
+const int ROOM_RIGHT = 750;
+const int PLAYER_WIDTH = 42;
+const int PLAYER_HEIGHT = 50;
+const int BULLET_WIDTH = 24;
+const int BULLET_HEIGHT = 20;
 #endif
