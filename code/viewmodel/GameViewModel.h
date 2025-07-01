@@ -23,12 +23,11 @@ public:
     void update();  // 每一帧都要调用，更新所有游戏实体的状态
     const Player* getPlayer() const;
 	const std::vector<std::unique_ptr<Entity>>& getEntities() const;
-	const int getCurrentHealth() const;
-	const int getMaxHealth() const;
+	const int* getCurrentHealth() const;
+	const int* getMaxHealth() const;
 	void registerCommand(CommandType type, std::shared_ptr<ICommandBase> command);
 	void executeCommand(CommandType type, const std::any& args);
-	using CommandExecutor = std::function<void(CommandType, const std::any&)>;
-	CommandExecutor getCommand();
+	EXCommand getCommand();
 	void registerAllCommands();
 
 

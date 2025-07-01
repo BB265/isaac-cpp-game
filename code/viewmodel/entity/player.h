@@ -21,10 +21,10 @@ public:
 
     // health
     void setHealth(int health) { health = health; }
-    int getHealth() const { return health; }
+    const int& getHealth() const { return health; }
     void changeHealth(int delta) { health += delta; }
     void setMaxHealth(int maxHealth) { maxHealth = maxHealth; }
-    int getMaxHealth() const { return maxHealth; }
+    const int& getMaxHealth() const { return maxHealth; }
     void changeMaxHealth(int delta) { maxHealth += delta; }
     bool isAlive() const { return health > 0; }
 

@@ -55,12 +55,18 @@ const std::vector<std::unique_ptr<Entity>>& GameViewModel::getEntities() const {
     return m_entities;
 }
 
-const int GameViewModel::getCurrentHealth() const {
-    return m_player_ptr->getHealth();
+const int* GameViewModel::getCurrentHealth() const {
+    if (!m_player_ptr) {
+        return nullptr;
+    }
+    return &m_player_ptr->getHealth();
 }
 
-const int GameViewModel::getMaxHealth() const {
-    return m_player_ptr->getMaxHealth();
+const int* GameViewModel::getMaxHealth() const {
+    if (!m_player_ptr) {
+        return nullptr;
+    }
+    return &m_player_ptr->getMaxHealth();
 }
 
 void GameViewModel::registerCommand(CommandType type, std::shared_ptr<ICommandBase> command) {
@@ -76,7 +82,7 @@ void GameViewModel::executeCommand(CommandType type, const std::any& args) {
 	}
 }
 
-GameViewModel::CommandExecutor GameViewModel::getCommand() {
+EXCommand GameViewModel::getCommand() {
     return [this](CommandType type, const std::any& args) {
         this->executeCommand(type, args);
     };
