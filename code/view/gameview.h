@@ -1,12 +1,11 @@
 #ifndef __GAMEVIEW_H_
 #define __GAMEVIEW_H_
 #include <SFML/Graphics.hpp>
-#include "viewmodel/GameViewModel.h"
 #include"common/MetaData.h"
 #include"common/Direction.h"
 #include"common/Commands.h"
 #include"common/EventSystem.h"
-class gamewindow {
+class gamewindow:public  IObserver {
 private:
 	GameViewModel& m_viewModel;
 	sf::Texture normal_texture;
