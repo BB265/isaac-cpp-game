@@ -51,8 +51,8 @@ const Player* GameViewModel::getPlayer() const {
     return m_player_ptr;
 }
 
-const std::vector<std::shared_ptr<Entity>>& GameViewModel::getEntities() const {
-    return m_entities;
+const std::vector<std::shared_ptr<Entity>>* GameViewModel::getEntities() const {
+    return &m_entities;
 }
 
 const int* GameViewModel::getCurrentHealth() const {

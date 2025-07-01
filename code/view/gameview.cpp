@@ -17,7 +17,8 @@ gamewindow::gamewindow() {
 }
 void gamewindow::draw_and_display() {
     window.draw(sprites.find("background")->second);
-    for (auto p : actors) {
+    const std::vector<std::shared_ptr<Entity>> _actors = *actors;
+    for (auto p : _actors) {
         int x = p->getX(), y = p->getY();
         if (p->getType() == EntityType::Player) {
             draw_issac(x, y);
