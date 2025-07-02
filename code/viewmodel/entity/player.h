@@ -41,7 +41,7 @@ private:
     sf::Vector2f start_velocity_;
     sf::Vector2f cur_velocity_;
     sf::Vector2f target_velocity_;
-    int ease_duration_f_ = 50;
+    int ease_duration_f_ = 35;
     int ease_f_num_ = 0;
     int maxHealth = 5;
     int health = maxHealth;

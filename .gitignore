@@ -52,3 +52,5 @@ CMakeUserPresets.json
 
 # Ignore vcpkg
 vcpkg_installed/
+
+*.md

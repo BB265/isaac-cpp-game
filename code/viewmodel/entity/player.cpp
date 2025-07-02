@@ -1,7 +1,7 @@
 #include "player.h"
 
 float easeOutQuad(float t) {
-    return 1 - (1 - t) * (1 - t);
+    return 1 - std::pow(1 - t, 4);
 }
 
 void Player::update() {
