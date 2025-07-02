@@ -126,7 +126,9 @@ void gamewindow::run() {
                 excommand(CommandType::StartGameCommand, std::make_any<std::tuple<>>);
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-                excommand(CommandType::ExitGameCommand, std::make_any<std::tuple<>>);
+                gamestate = GameState::MAIN_WINDOW;
+                const std::map < std::string, sf::Texture* > textures = AssetManager::get_instance().get_textures();
+                sprites.find("background")->second.setTexture(*textures.at("main_window"));
             }
             window.clear();
             draw_and_display();
