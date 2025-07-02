@@ -20,7 +20,9 @@ public:
 		return m_textures;
 	}
 	AssetManager(){
-		load_texture("background", "../code/assets/room.png");
+		load_texture("room", "../code/assets/room.png");
+		load_texture("main_window", "../code/assets/main_window.png");
+		load_texture("end_window","../code/assets/end_window.png");
 		load_texture("isaac", "../code/assets/isaac.png");
 		load_texture("half_heart", "../code/assets/half_heart.png");
 		load_texture("empty_heart", "../code/assets/empty_heart.png");

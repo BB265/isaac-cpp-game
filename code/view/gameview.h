@@ -8,6 +8,12 @@
 #include"common/entity.h"
 #include"AssetManager.h"
 #include<memory>
+enum class GameState
+{
+	MAIN_WINDOW,
+	GAMING,
+	END_GAME
+};
 class gamewindow:public IObserver {
 private:
 	const int* health;
@@ -15,6 +21,7 @@ private:
 	std::map<std::string, sf::Sprite>sprites;
 	const std::vector<std::shared_ptr<Entity>>* actors;
 	EXCommand excommand;
+	GameState gamestate;
 public:
 	sf::RenderWindow window;
 	gamewindow();

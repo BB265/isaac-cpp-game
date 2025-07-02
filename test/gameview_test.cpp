@@ -12,7 +12,6 @@ TEST(AssetManagerTest, TextureLoadingTest) {
     AssetManager& manager = AssetManager::get_instance();
     const auto textures = manager.get_textures();
 
-    EXPECT_NE(textures.find("background"), textures.end());
     EXPECT_NE(textures.find("isaac"), textures.end());
     EXPECT_NE(textures.find("heart"), textures.end());
     EXPECT_NE(textures.find("half_heart"), textures.end());

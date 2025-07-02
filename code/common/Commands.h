@@ -11,6 +11,8 @@ enum class CommandType
     MoveCommand,
     ShootCommand,
     UpdateCommand,
+    StartGameCommand,
+    ExitGameCommand
 };
 
 using EXCommand = std::function<void(CommandType, const std::any&)>;
