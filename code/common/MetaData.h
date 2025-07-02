@@ -11,5 +11,5 @@ const int PLAYER_HEIGHT = 50;
 const int BULLET_WIDTH = 24;
 const int BULLET_HEIGHT = 20;
 const int ENEMY_WIDTH = 42;
-const int ENEMY_HEIGHT = 42;
+const int ENEMY_HEIGHT = 50;
 #endif

@@ -10,6 +10,7 @@ gamewindow::gamewindow() {
     }
     sprites.find("isaac")->second.setPosition(sf::Vector2f(400, 300)); // default position
     sprites.find("isaac")->second.setScale(sf::Vector2f(1.5, 1.5));
+    sprites.find("enemy")->second.setScale(sf::Vector2f(1.5, 1.5));
     sprites.find("heart")->second.setScale(sf::Vector2f(3.f, 3.f ));// set heart scale
     sprites.find("half_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
     sprites.find("empty_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
