@@ -83,6 +83,7 @@ void gamewindow::run() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
                 window.close();
             }
+            window.clear();
             draw_and_display();
         }
         else if (gamestate == GameState::GAMING) {
@@ -127,6 +128,7 @@ void gamewindow::run() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
                 excommand(CommandType::ExitGameCommand, std::make_any<std::tuple<>>);
             }
+            window.clear();
             draw_and_display();
         }
         
@@ -138,15 +140,20 @@ Direction gamewindow::judgeDirection(int up, int right) {
     return static_cast<Direction>(value);
 }
 void gamewindow::onNotify(GameEvent event) {
+    const std::map < std::string, sf::Texture* > textures = AssetManager::get_instance().get_textures();
     switch (event)
     {
     case GameEvent::GAME_STARTED:
+        gamestate = GameState::GAMING;
+        sprites.find("background")->second.setTexture(*textures.at("room"));
         break;
     case GameEvent::RENDER_FLUSH:
         window.clear();
         draw_and_display();
         break;
     case GameEvent::PLAYER_DIED:
+        gamestate = GameState::END_GAME;
+        sprites.find("background")->second.setTexture(*textures.at("end_window"));
         break;
     case GameEvent::ENEMY_KILLED:
         break;
