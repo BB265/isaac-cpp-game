@@ -23,6 +23,7 @@ public:
     // update interfaces
     virtual void update() = 0;
     virtual sf::IntRect getBounds() const = 0;
+    virtual void collideWith(Entity* other) = 0;
 
 private:
     int x_;

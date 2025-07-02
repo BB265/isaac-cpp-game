@@ -10,6 +10,9 @@ public:
     Bullet(int x, int y, const Player* owner, int damage, int speed, Direction initial_dir);
     ~Bullet() {}
     void update() override;
+
+    // collision
+    void collideWith(Entity* other) override;
     sf::IntRect getBounds() const override { return sf::IntRect({getX(), getY()}, {BULLET_WIDTH, BULLET_HEIGHT}); }
 
     // validation

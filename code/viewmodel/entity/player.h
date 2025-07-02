@@ -17,22 +17,28 @@ public:
     sf::Vector2f getVelocity() const { return cur_velocity_; }
     bool isMoving() const { return direction_ != Direction::None; }
     void update() override;
+
+    // collision
     sf::IntRect getBounds() const override { return sf::IntRect({getX(), getY()}, {PLAYER_WIDTH, PLAYER_HEIGHT}); }
+    void collideWith(Entity* other) override {}
+    void setInvincibleCd(sf::Time invincibleCd_) { invincible_cd_ = invincibleCd_; }
+    sf::Time getInvincibleCd() const { return invincible_cd_; }
+    bool isInvincible();
 
     // health
-    void setHealth(int health_) { health = health_; }
-    const int& getHealth() const { return health; }
-    void changeHealth(int delta) { health += delta; }
-    void setMaxHealth(int maxHealth_) { maxHealth = maxHealth_; }
-    const int& getMaxHealth() const { return maxHealth; }
-    void changeMaxHealth(int delta) { maxHealth += delta; }
-    bool isAlive() const { return health > 0; }
+    void setHealth(int health_) { health_ = health_; }
+    const int& getHealth() const { return health_; }
+    void changeHealth(int delta) { health_ += delta; }
+    void setMaxHealth(int maxHealth_) { max_health_ = maxHealth_; }
+    const int& getMaxHealth() const { return max_health_; }
+    void changeMaxHealth(int delta) { max_health_ += delta; }
+    bool isAlive() const { return health_ > 0; }
 
     // attack
-    void setDamage(int damage_) { damage = damage_; }
-    int getDamage() const { return damage; }
-    void setCoolDown(sf::Time coolDown_) { coolDown = coolDown_; }
-    sf::Time getCoolDown() const { return coolDown; }
+    void setDamage(int damage_) { damage_ = damage_; }
+    int getDamage() const { return damage_; }
+    void setCoolDown(sf::Time coolDown_) { shoot_cd_ = coolDown_; }
+    sf::Time getCoolDown() const { return shoot_cd_; }
     bool atCoolDown();
 
 private:
@@ -43,10 +49,12 @@ private:
     sf::Vector2f target_velocity_;
     int ease_duration_f_ = 35;
     int ease_f_num_ = 0;
-    int maxHealth = 5;
-    int health = maxHealth;
-    int damage = 1;
-    sf::Clock coolDownClock;
-    sf::Time coolDown = sf::seconds(0.5);
-    sf::Time lastShootTime = sf::Time::Zero;
+    int max_health_ = 5;
+    int health_ = max_health_;
+    int damage_ = 1;
+    sf::Clock clock_;
+    sf::Time shoot_cd_ = sf::seconds(0.5);
+    sf::Time last_shoot_ = sf::Time::Zero;
+    sf::Time invincible_cd_ = sf::seconds(1);
+    sf::Time last_invincible_ = sf::Time::Zero;
 };

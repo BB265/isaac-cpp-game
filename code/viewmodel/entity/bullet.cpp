@@ -1,4 +1,5 @@
 #include "bullet.h"
+#include "enemy.h"
 
 Bullet::Bullet(int x, int y, const Player* owner, int damage, int speed, Direction initial_dir)
     : Entity(x, y, EntityType::Bullet), owner_(owner), damage_(damage), speed_(speed) {
@@ -29,6 +30,15 @@ void Bullet::update() {
     if (getY() < ROOM_TOP) {
         is_valid_ = false;
     } else if (getY() > ROOM_BOTTOM - BULLET_HEIGHT) {
+        is_valid_ = false;
+    }
+}
+
+void Bullet::collideWith(Entity* other) {
+    if (other->getType() == EntityType::Enemy) {
+        Enemy* enemy = static_cast<Enemy*>(other);
+        int health = enemy->getHealth();
+        enemy->setHealth(health - damage_);
         is_valid_ = false;
     }
 }

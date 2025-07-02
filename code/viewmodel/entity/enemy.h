@@ -9,15 +9,11 @@ public:
     // move
     void setSpeed(int speed) { speed_ = speed; }
     int getSpeed() const { return speed_; }
-    void update() override {
-        int dx = target->getX() - getX();
-        int dy = target->getY() - getY();
-        int distance = sqrt(dx * dx + dy * dy);
-        if (distance > 0) {
-            setX(getX() + dx * speed_ / distance);
-            setY(getY() + dy * speed_ / distance);
-        }
-    }
+    void update() override;
+
+    // collision
+    void collideWith(Entity* entity) override;
+    sf::IntRect getBounds() const override { return sf::IntRect({getX(), getY()}, {ENEMY_WIDTH, ENEMY_HEIGHT}); }
 
     // attack
     int getDamage() const { return damage_; }
@@ -26,10 +22,11 @@ public:
     // health
     int getHealth() const { return health_; }
     void setHealth(int health) { health_ = health; }
+    bool isAlive() const { return health_ > 0; }
 
 private:
-    int health_ = 1;
+    int health_ = 2;
     int damage_ = 1;
-    int speed_ = 3;
+    int speed_ = 1;
     const Entity* target;
 };

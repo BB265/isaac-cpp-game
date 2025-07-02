@@ -69,8 +69,16 @@ void Player::setSpeed(int speed) {
 }
 
 bool Player::atCoolDown() {
-    if (coolDownClock.getElapsedTime() - lastShootTime >= coolDown) {
-        lastShootTime = coolDownClock.getElapsedTime();
+    if (clock_.getElapsedTime() - last_shoot_ >= shoot_cd_) {
+        last_shoot_ = clock_.getElapsedTime();
+        return false;
+    }
+    return true;
+}
+
+bool Player::isInvincible() {
+    if (clock_.getElapsedTime() - last_invincible_ >= invincible_cd_) {
+        last_invincible_ = clock_.getElapsedTime();
         return false;
     }
     return true;
