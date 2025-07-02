@@ -1,64 +1,74 @@
 #include"gameview.h"
-gamewindow::gamewindow(GameViewModel& vm) :m_viewModel(vm),isaac_sprite(normal_texture),enemy_sprite(normal_texture), tears_sprite(normal_texture), background_sprite(normal_texture), heart_sprite(normal_texture) {
+gamewindow::gamewindow() {
     window = sf::RenderWindow(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Isaac Game");
     window.setFramerateLimit(60);
-    background_sprite = createSprite("../code/assets/room.png", background_Texture);
-    // load texture and sprite
-    
-    isaac_sprite = createSprite("../code/assets/isaac.png", character_Texture);
-    isaac_sprite.setPosition(sf::Vector2f( 400, 300 )); // default position
-
-    // load heart
-    
-    heart_sprite = createSprite("../code/assets/heart.png", heart_Texture);
-    heart_sprite.setScale(sf::Vector2f(3.f, 3.f )); // set heart scale
-
-    
-    enemy_sprite= createSprite("../code/assets/Champion_Red.png", enemy_Texture);
-
-    
-    tears_sprite= createSprite("../code/assets/tear.png", tears_Texture);
+    const std::map < std::string, sf::Texture* > textures = AssetManager::get_instance().get_textures();
+    for (auto &p : textures) {
+        if (!p.first.empty()) {
+            sprites.emplace(p.first, sf::Sprite((*p.second)));
+        }
+    }
+    sprites.find("isaac")->second.setPosition(sf::Vector2f(400, 300)); // default position
+    sprites.find("isaac")->second.setScale(sf::Vector2f(1.5, 1.5));
+    sprites.find("heart")->second.setScale(sf::Vector2f(3.f, 3.f ));// set heart scale
+    sprites.find("half_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
+    sprites.find("empty_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
+    sprites.find("tear")->second.setScale(sf::Vector2f(0.4f, 0.4f));
 }
 void gamewindow::draw_and_display() {
-    window.draw(background_sprite);
-    const Player& player = m_viewModel.getPlayer();
-    set_isaac_position(player.getX(), player.getY());
-    window.draw(isaac_sprite);
-
-    // draw heart
-    for (int i = 0; i <player.getHealth(); ++i) {
-        heart_sprite.setPosition({ 10.f + i * 30.f, 30.f }); 
-        window.draw(heart_sprite);
+    window.draw(sprites.find("background")->second);
+    const std::vector<std::shared_ptr<Entity>> _actors = *actors;
+    for (auto p : _actors) {
+        int x = p->getX(), y = p->getY();
+        if (p->getType() == EntityType::Player) {
+            draw_issac(x, y);
+        }
+        else if (p->getType() == EntityType::Enemy) {
+            draw_enemy(x, y);
+        }
+        else if (p->getType() == EntityType::Bullet) {
+            draw_tears(x, y);
+        }
     }
-    //undone
+    // draw heart
+    int mh = (*max_health), h = (*health);
+    mh = mh / 2;
+    int hh = h % 2;
+    h = h / 2;
+    int i = 0;
+    for (; i < h; i++) {
+        sprites.find("heart")->second.setPosition({10.f + i * 30.f, 30.f});
+        window.draw(sprites.find("heart")->second);
+    }
+    for (; i < h + hh; i++) {
+        sprites.find("half_heart")->second.setPosition({ 10.f + i * 30.f, 30.f });
+        window.draw(sprites.find("half_heart")->second);
+    }
+    for (; i < mh; i++) {
+        sprites.find("empty_heart")->second.setPosition({ 10.f + i * 30.f, 30.f });
+        window.draw(sprites.find("empty_heart")->second);
+    }
     window.display();
 }
-sf::Sprite gamewindow::createSprite(const std::string& filepath, sf::Texture& texture) {
-    if (!texture.loadFromFile(filepath)) {
-        throw std::runtime_error("Failed to load texture: " + filepath);
-    }
-    return sf::Sprite(texture);
+void gamewindow::draw_issac(int x, int y) {
+    sprites.find("isaac")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("isaac")->second);
 }
-void gamewindow::setposition(sf::Sprite& sprite, sf::Vector2f position) {
-    sprite.setPosition(position);
-}
-void gamewindow::set_isaac_position(int x, int y) {
-    setposition(isaac_sprite, sf::Vector2f(x, y));
-}
-void gamewindow::draw_enymy(int x, int y) {
-    setposition(enemy_sprite, sf::Vector2f(x, y));
-    window.draw(enemy_sprite);
+void gamewindow::draw_enemy(int x, int y) {
+    sprites.find("enemy")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("enemy")->second);
 }
 void gamewindow::draw_tears(int x, int y) {
-    setposition(tears_sprite, sf::Vector2f(x, y));
-    window.draw(tears_sprite);
+    sprites.find("tear")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("tear")->second);
 }
 void gamewindow::run() {
     while (window.isOpen())
     {
-        window.clear();
         Direction dir = Direction::None;
+        Direction sdir = Direction::None;
         int dir_up=1, dir_right=1;
+        int shoot_up = 1, shoot_right = 1;
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
@@ -78,14 +88,50 @@ void gamewindow::run() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
             dir_right += 1;
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+            shoot_up += 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+            shoot_up -= 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+            shoot_right -= 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+            shoot_right += 1;
+        }
         dir = judgeDirection(dir_up, dir_right);
-        m_viewModel.moveCommand(dir);
-        m_viewModel.update();
-        draw_and_display();
+        sdir = judgeDirection(shoot_up, shoot_right);
+        excommand(CommandType::MoveCommand, std::make_any<std::tuple<Direction>>(dir));
+        if(sdir!=Direction::None)excommand(CommandType::ShootCommand, std::make_any<std::tuple<Direction>>(sdir));
+        excommand(CommandType::UpdateCommand, std::make_any<std::tuple<>>);
     }
 }
 Direction gamewindow::judgeDirection(int up, int right) {
     int value = 3 * right + up;
     if (value > 8)return Direction::None;
     return static_cast<Direction>(value);
+}
+void gamewindow::onNotify(GameEvent event) {
+    switch (event)
+    {
+    case GameEvent::GAME_STARTED:
+        break;
+    case GameEvent::RENDER_FLUSH:
+        window.clear();
+        draw_and_display();
+        break;
+    case GameEvent::PLAYER_DIED:
+        break;
+    case GameEvent::ENEMY_KILLED:
+        break;
+    case GameEvent::ITEM_PICKED_UP:
+        break;
+    case GameEvent::PLAY_SOUND_SHOOT:
+        break;
+    case GameEvent::PLAY_SOUND_HIT:
+        break;
+    default:
+        break;
+    }
 }

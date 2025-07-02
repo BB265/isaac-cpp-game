@@ -2,52 +2,131 @@
 
 #include "GameViewModel.h"
 
-GameViewModel::GameViewModel()
-    : m_player(0, 0, 0) {
-
-    moveCommand = [this](Direction dir) {
-        m_player.setDirection(dir);
-    };
-
+GameViewModel::GameViewModel() {
+	registerAllCommands();
 }
 
 void GameViewModel::startNewGame() {
     // 1. 清空之前状态
-    m_enemies.clear();
+	m_entities.clear();
+    m_player_ptr = nullptr;
 
-    // 2. 初始化状态
-    m_player.setX(400);  // 玩家初始位置x
-    m_player.setY(300);  // 玩家初始位置y
-    m_player.setSpeed(5);  // 玩家初始速度
-    m_player.setHealth(5);  // 玩家初始血量
+	// 2. 创建玩家实体
+	auto player = std::make_shared<Player>(400, 300, 5);
+	player->setMaxHealth(6);
+	player->setHealth(6);
+	m_player_ptr = player.get();
+	m_entities.push_back(std::move(player));
 
-    /*
-    // 3. 初始化本关卡的敌人
-    m_enemies.emplace_back(100, 100, 2);
-    m_enemies.emplace_back(700, 100, 2);
-    m_enemies.emplace_back(100, 500, 2);
-    m_enemies.emplace_back(700, 500, 2);
-    */
+	// 3. 创建敌人实体
 
     // 4. 发布一个“游戏开始”的事件
     notify(GameEvent::GAME_STARTED);
 }
 
 void GameViewModel::update() {
-    m_player.update();
+	// 1. 更新实体状态
+    for (auto& entity : m_entities) {
+        entity->update(); // 会自动调用Player, Enemy, Bullet等各自的update方法
+    }
 
-    // TODO: 未来在这里遍历并更新所有敌人和子弹的状态
-    // for (auto& enemy : m_enemies) {
-    //     enemy.update();
-    // }
+    // 2. 碰撞检测
 
-    // TODO: 在这里执行碰撞检测等其他游戏逻辑
+	// 3. 删除无效实体
+    m_entities.erase(
+        std::remove_if(m_entities.begin(), m_entities.end(),
+            [](const std::shared_ptr<Entity>& entity) {
+                if (entity->getType() == EntityType::Bullet) {
+                    const Bullet* bullet = static_cast<const Bullet*>(entity.get());
+                    return !bullet->isValid();
+                }
+                return false;
+            }),
+        m_entities.end()
+    );
+
 }
 
-const Player& GameViewModel::getPlayer() const {
-    return m_player;
+const Player* GameViewModel::getPlayer() const {
+    return m_player_ptr;
 }
 
-const std::vector<Enemy>& GameViewModel::getEnemies() const {
-    return m_enemies;
+const std::vector<std::shared_ptr<Entity>>* GameViewModel::getEntities() const {
+    return &m_entities;
+}
+
+const int* GameViewModel::getCurrentHealth() const {
+    if (!m_player_ptr) {
+        return nullptr;
+    }
+    return &(m_player_ptr->getHealth());
+}
+
+const int* GameViewModel::getMaxHealth() const {
+    if (!m_player_ptr) {
+        return nullptr;
+    }
+    return &m_player_ptr->getMaxHealth();
+}
+
+void GameViewModel::registerCommand(CommandType type, std::shared_ptr<ICommandBase> command) {
+	m_commands[type] = command;
+}
+
+void GameViewModel::executeCommand(CommandType type, const std::any& args) {
+    if(m_commands.find(type) != m_commands.end()) {
+        m_commands[type]->Execute(args);
+    }
+    else {
+        std::cerr << "Command not found: " << static_cast<int>(type) << std::endl;
+	}
+}
+
+EXCommand GameViewModel::getCommand() {
+    return [this](CommandType type, const std::any& args) {
+        this->executeCommand(type, args);
+    };
+}
+
+void GameViewModel::updateCommand() {
+    update();
+    notify(GameEvent::RENDER_FLUSH);
+}
+
+void GameViewModel::moveCommand(Direction dir) {
+    m_player_ptr->setDirection(dir);
+}
+
+void GameViewModel::shootCommand(Direction dir) {
+    if (!m_player_ptr || m_player_ptr->atCoolDown()) {
+        return;
+    }
+    m_entities.push_back(
+        std::make_shared<Bullet>(
+            m_player_ptr->getX() + PLAYER_WIDTH / 2 - BULLET_WIDTH / 2,
+            m_player_ptr->getY() + PLAYER_HEIGHT / 2 - BULLET_HEIGHT / 2,
+            m_player_ptr,
+            1,  // 子弹伤害
+            10, // 子弹速度
+            dir
+        )
+    );
+    notify(GameEvent::PLAY_SOUND_SHOOT);
+}
+
+void GameViewModel::registerAllCommands() {
+    // UpdateCommand
+    registerCommand(
+        CommandType::UpdateCommand,
+        std::make_shared<Command<>>([this]() { updateCommand(); }));
+
+    // MoveCommand
+    registerCommand(
+        CommandType::MoveCommand,
+        std::make_shared<Command<Direction>>([this](Direction dir) { moveCommand(dir); }));
+
+    // ShootCommand
+    registerCommand(
+        CommandType::ShootCommand,
+        std::make_shared<Command<Direction>>([this](Direction dir) { shootCommand(dir); }));
 }

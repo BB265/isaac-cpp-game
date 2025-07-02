@@ -1,15 +1,7 @@
-#include <iostream>
-#include"view/gameview.h"
-#include "viewmodel/GameViewModel.h"
-#include<optional>
+#include"app/isaacApp.h"
 int main() {
-
-	GameViewModel gameViewModel;
-
-	gamewindow gameview(gameViewModel);
-
-	gameViewModel.startNewGame();
-	gameview.run();
-    
+	IsaacApp isaacapp;
+	isaacapp.initialize();
+	isaacapp.run();
 	return 0;
 }

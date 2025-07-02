@@ -10,6 +10,7 @@
  */
 enum class GameEvent {
 	GAME_STARTED,
+    RENDER_FLUSH,
     PLAYER_DIED,
     ENEMY_KILLED,
     ITEM_PICKED_UP,
