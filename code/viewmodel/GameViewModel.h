@@ -32,7 +32,7 @@ public:
 	void updateCommand();
 	void moveCommand(Direction dir);
 	void shootCommand(Direction dir);
-	void collisionDetection();
+	void startGameCommand();
 
 private:
 	std::vector<std::shared_ptr<Entity>> m_entities;

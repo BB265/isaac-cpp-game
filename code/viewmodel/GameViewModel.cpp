@@ -36,7 +36,12 @@ void GameViewModel::update() {
     }
 
     // 2. 碰撞检测
-	collisionDetection();
+    for(auto entity1 : m_entities) 
+        for (auto entity2 : m_entities) {
+            if (entity1 != entity2 && entity1->getBounds().findIntersection(entity2->getBounds())) {
+                entity1->collideWith(entity2.get());
+            }
+        }
 
 	// 3. 删除无效实体
     m_entities.erase(
@@ -54,6 +59,10 @@ void GameViewModel::update() {
         m_entities.end()
     );
 
+    // 4. 发布一个“玩家死亡”的事件
+    if (m_player_ptr && !m_player_ptr->isAlive()) {
+        notify(GameEvent::PLAYER_DIED);
+    }
 }
 
 const Player* GameViewModel::getPlayer() const {
@@ -123,14 +132,8 @@ void GameViewModel::shootCommand(Direction dir) {
     notify(GameEvent::PLAY_SOUND_SHOOT);
 }
 
-void GameViewModel::collisionDetection() {
-	// 将每两个实体调用方法进行碰撞检测
-    for(auto entity1 : m_entities) 
-        for (auto entity2 : m_entities) {
-            if (entity1 != entity2 && entity1->getBounds().findIntersection(entity2->getBounds())) {
-                entity1->collideWith(entity2.get());
-            }
-        }
+void GameViewModel::startGameCommand() {
+    startNewGame();
 }
 
 void GameViewModel::registerAllCommands() {
@@ -148,4 +151,9 @@ void GameViewModel::registerAllCommands() {
     registerCommand(
         CommandType::ShootCommand,
         std::make_shared<Command<Direction>>([this](Direction dir) { shootCommand(dir); }));
+
+    // StartGameCommand
+    registerCommand(
+        CommandType::StartGameCommand,
+        std::make_shared<Command<>>([this]() { startGameCommand(); }));
 }
