@@ -76,6 +76,13 @@ void gamewindow::draw_tears(float x, float y) {
 void gamewindow::run() {
     while (window.isOpen())
     {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                window.close();
+            }
+        }
         if (gamestate == GameState::MAIN_WINDOW) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
                 excommand(CommandType::StartGameCommand, std::make_any<std::tuple<>>);
