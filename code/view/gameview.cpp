@@ -76,18 +76,24 @@ void gamewindow::draw_tears(float x, float y) {
 void gamewindow::run() {
     while (window.isOpen())
     {
+        bool escape = false;
         while (const std::optional event = window.pollEvent())
         {
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
             }
+            if (auto keyreleased = event->getIf<sf::Event::KeyReleased>()) {
+                if (keyreleased->scancode == sf::Keyboard::Scan::Escape) {
+                    escape = true;
+                }
+            }
         }
         if (gamestate == GameState::MAIN_WINDOW) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter)) {
                 excommand(CommandType::StartGameCommand, std::make_any<std::tuple<>>);
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            if (escape) {
                 window.close();
             }
             window.clear();
@@ -132,7 +138,7 @@ void gamewindow::run() {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
                 excommand(CommandType::StartGameCommand, std::make_any<std::tuple<>>);
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+            if (escape) {
                 gamestate = GameState::MAIN_WINDOW;
                 const std::map < std::string, sf::Texture* > textures = AssetManager::get_instance().get_textures();
                 sprites.find("background")->second.setTexture(*textures.at("main_window"));
