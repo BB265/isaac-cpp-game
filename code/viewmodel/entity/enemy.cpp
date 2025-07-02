@@ -2,11 +2,11 @@
 #include "player.h"
 
 void Enemy::update() {
-    int dx = target->getX() - getX();
-    int dy = target->getY() - getY();
+    float dx = target->getX() - getX();
+    float dy = target->getY() - getY();
     // std::cout << "dx: " << dx << " dy: " << dy << std::endl;
-    if (dx != 0 || dy != 0) {
-        double distance = sqrt(dx * dx + dy * dy);
+    float distance = sqrt(dx * dx + dy * dy);
+    if (distance != 0) {
         setX(getX() + dx * speed_ / distance);
         setY(getY() + dy * speed_ / distance);
     }

@@ -19,6 +19,11 @@ void GameViewModel::startNewGame() {
 	m_entities.push_back(std::move(player));
 
 	// 3. 创建敌人实体
+    auto enemy = std::make_shared<Enemy>(ROOM_LEFT, ROOM_TOP, m_player_ptr);
+    enemy->setHealth(2);
+    enemy->setSpeed(1);
+    enemy->setDamage(1);
+    m_entities.push_back(std::move(enemy));
 
     // 4. 发布一个“游戏开始”的事件
     notify(GameEvent::GAME_STARTED);
@@ -40,6 +45,9 @@ void GameViewModel::update() {
                 if (entity->getType() == EntityType::Bullet) {
                     const Bullet* bullet = static_cast<const Bullet*>(entity.get());
                     return !bullet->isValid();
+                } else if (entity->getType() == EntityType::Enemy) {
+                    const Enemy* enemy = static_cast<const Enemy*>(entity.get());
+                    return !enemy->isAlive();
                 }
                 return false;
             }),
@@ -119,8 +127,10 @@ void GameViewModel::collisionDetection() {
 	// 将每两个实体调用方法进行碰撞检测
     for(auto entity1 : m_entities) 
         for (auto entity2 : m_entities) {
-            entity1->crush(entity2);
-    }
+            if (entity1 != entity2 && entity1->getBounds().findIntersection(entity2->getBounds())) {
+                entity1->collideWith(entity2.get());
+            }
+        }
 }
 
 void GameViewModel::registerAllCommands() {

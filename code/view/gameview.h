@@ -21,9 +21,9 @@ public:
 	~gamewindow(){}
 	void run();
 	void draw_and_display();
-	void draw_issac(int x, int y);
-	void draw_enemy(int x, int y);
-	void draw_tears(int x, int y);
+	void draw_issac(float x, float y);
+	void draw_enemy(float x, float y);
+	void draw_tears(float x, float y);
 	void set_actors(const std::vector<std::shared_ptr<Entity>>* _actors) {
 		actors = _actors;
 	}

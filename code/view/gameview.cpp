@@ -20,7 +20,7 @@ void gamewindow::draw_and_display() {
     window.draw(sprites.find("background")->second);
     const std::vector<std::shared_ptr<Entity>> _actors = *actors;
     for (auto p : _actors) {
-        int x = p->getX(), y = p->getY();
+        float x = p->getX(), y = p->getY();
         if (p->getType() == EntityType::Player) {
             draw_issac(x, y);
         }
@@ -51,15 +51,15 @@ void gamewindow::draw_and_display() {
     }
     window.display();
 }
-void gamewindow::draw_issac(int x, int y) {
+void gamewindow::draw_issac(float x, float y) {
     sprites.find("isaac")->second.setPosition(sf::Vector2f(x, y));
     window.draw(sprites.find("isaac")->second);
 }
-void gamewindow::draw_enemy(int x, int y) {
+void gamewindow::draw_enemy(float x, float y) {
     sprites.find("enemy")->second.setPosition(sf::Vector2f(x, y));
     window.draw(sprites.find("enemy")->second);
 }
-void gamewindow::draw_tears(int x, int y) {
+void gamewindow::draw_tears(float x, float y) {
     sprites.find("tear")->second.setPosition(sf::Vector2f(x, y));
     window.draw(sprites.find("tear")->second);
 }

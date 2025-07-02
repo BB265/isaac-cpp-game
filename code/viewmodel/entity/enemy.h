@@ -3,17 +3,17 @@
 
 class Enemy : public Entity {
 public:
-    Enemy(int x, int y, const Entity* target) : Entity(x, y, EntityType::Enemy), target(target) {}
+    Enemy(float x, float y, const Entity* target) : Entity(x, y, EntityType::Enemy), target(target) {}
     ~Enemy() {}
 
     // move
-    void setSpeed(int speed) { speed_ = speed; }
-    int getSpeed() const { return speed_; }
+    void setSpeed(float speed) { speed_ = speed; }
+    float getSpeed() const { return speed_; }
     void update() override;
 
     // collision
     void collideWith(Entity* entity) override;
-    sf::IntRect getBounds() const override { return sf::IntRect({getX(), getY()}, {ENEMY_WIDTH, ENEMY_HEIGHT}); }
+    sf::FloatRect getBounds() const override { return sf::FloatRect({getX(), getY()}, {ENEMY_WIDTH, ENEMY_HEIGHT}); }
 
     // attack
     int getDamage() const { return damage_; }
@@ -27,6 +27,6 @@ public:
 private:
     int health_ = 2;
     int damage_ = 1;
-    int speed_ = 1;
+    float speed_ = 1;
     const Entity* target;
 };
