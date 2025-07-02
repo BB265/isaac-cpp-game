@@ -33,5 +33,5 @@ TEST(GameViewTest, JudgeDirectionTest) {
     EXPECT_EQ(window.judgeDirection(0, 2), Direction::DownRight);
     EXPECT_EQ(window.judgeDirection(1, 2), Direction::Right);
     EXPECT_EQ(window.judgeDirection(2, 0), Direction::UpLeft);
-    EXPECT_EQ(window.judgeDirection(2, 2), Direction::UpRight;
+    EXPECT_EQ(window.judgeDirection(2, 2), Direction::UpRight);
 }

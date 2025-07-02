@@ -12,14 +12,14 @@ void GameViewModel::startNewGame() {
     m_player_ptr = nullptr;
 
 	// 2. 创建玩家实体
-	auto player = std::make_shared<Player>(400, 300, 5);
+	auto player = std::make_shared<Player>(400.f, 300.f, 5.f);
 	player->setMaxHealth(6);
 	player->setHealth(6);
 	m_player_ptr = player.get();
 	m_entities.push_back(std::move(player));
 
 	// 3. 创建敌人实体
-    auto enemy = std::make_shared<Enemy>(ROOM_LEFT, ROOM_TOP, m_player_ptr);
+    auto enemy = std::make_shared<Enemy>(100.f, 100.f, m_player_ptr);
     enemy->setHealth(2);
     enemy->setSpeed(1);
     enemy->setDamage(1);
