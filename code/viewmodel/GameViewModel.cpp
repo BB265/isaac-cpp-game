@@ -31,6 +31,7 @@ void GameViewModel::update() {
     }
 
     // 2. 碰撞检测
+	collisionDetection();
 
 	// 3. 删除无效实体
     m_entities.erase(
@@ -112,6 +113,14 @@ void GameViewModel::shootCommand(Direction dir) {
         )
     );
     notify(GameEvent::PLAY_SOUND_SHOOT);
+}
+
+void GameViewModel::collisionDetection() {
+	// 将每两个实体调用方法进行碰撞检测
+    for(auto entity1 : m_entities) 
+        for (auto entity2 : m_entities) {
+            entity1->crush(entity2);
+    }
 }
 
 void GameViewModel::registerAllCommands() {
