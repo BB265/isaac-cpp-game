@@ -13,7 +13,7 @@ public:
 
     // collision
     void collideWith(Entity* entity) override;
-    sf::FloatRect getBounds() const override { return sf::FloatRect({getX(), getY()}, {ENEMY_WIDTH, ENEMY_HEIGHT}); }
+    sf::FloatRect getBounds() const override { return sf::FloatRect({getX() + 10, getY() + 10}, {ENEMY_WIDTH - 20, ENEMY_HEIGHT - 10}); }
 
     // attack
     int getDamage() const { return damage_; }

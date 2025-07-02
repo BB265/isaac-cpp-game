@@ -19,7 +19,7 @@ public:
     void update() override;
 
     // collision
-    sf::FloatRect getBounds() const override { return sf::FloatRect({getX(), getY()}, {PLAYER_WIDTH, PLAYER_HEIGHT}); }
+    sf::FloatRect getBounds() const override { return sf::FloatRect({getX() + 10, getY() + 10}, {PLAYER_WIDTH - 20, PLAYER_HEIGHT - 10}); }
     void collideWith(Entity* other) override {}
     void setInvincibleCd(sf::Time invincibleCd) { invincible_cd_ = invincibleCd; }
     sf::Time getInvincibleCd() const { return invincible_cd_; }
