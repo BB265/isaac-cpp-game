@@ -41,9 +41,7 @@ jobs:
         
     # 安装项目依赖
     - name: Install dependencies
-      run: ./vcpkg/vcpkg install --triplet=${{ matrix.triplet }}
-      env:
-        triplet: x64-linux  # Linux 平台使用 x64-linux triplet
+      run: ./vcpkg/vcpkg install
 
     # 配置和构建项目
     - name: Configure with CMake Preset
