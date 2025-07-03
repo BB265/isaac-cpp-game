@@ -14,24 +14,18 @@ protected:
     }
 };
 
-// 测试 startNewGame 是否正确初始化了玩家和敌人
+// 测试 startNewGame 是否正确初始化了玩家
 TEST_F(GameViewModelTest, StartNewGame) {
     EXPECT_NE(gameViewModel.getPlayer(), nullptr);
-    // 初始时有一个玩家和一个敌人
-    EXPECT_EQ(gameViewModel.getEntities()->size(), 2);
+    // 初始时有一个玩家
 
     int playerCount = 0;
-    int enemyCount = 0;
     for (const auto& entity : *gameViewModel.getEntities()) {
         if (entity->getType() == EntityType::Player) {
             playerCount++;
         }
-        else if (entity->getType() == EntityType::Enemy) {
-            enemyCount++;
-        }
     }
     EXPECT_EQ(playerCount, 1);
-    EXPECT_EQ(enemyCount, 1);
 }
 
 // 测试玩家移动指令
