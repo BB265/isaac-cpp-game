@@ -12,6 +12,7 @@ public:
     // collision
     void collideWith(Entity* other) override;
     sf::FloatRect getBounds() const override { return sf::FloatRect({getX(), getY()}, {BULLET_WIDTH, BULLET_HEIGHT}); }
+    sf::Vector2f getVelocity() const { return velocity_; }
 
     // validation
     bool isValid() const { return is_valid_; }

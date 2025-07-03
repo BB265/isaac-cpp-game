@@ -1,5 +1,6 @@
 #pragma once
 #include "common/entity.h"
+#include "bullet.h"
 
 class Enemy : public Entity {
 public:
@@ -14,6 +15,7 @@ public:
     // collision
     void collideWith(Entity* entity) override;
     sf::FloatRect getBounds() const override { return sf::FloatRect({getX() + 10, getY() + 10}, {ENEMY_WIDTH - 20, ENEMY_HEIGHT - 10}); }
+    void knockBack(Bullet* bullet);
 
     // attack
     int getDamage() const { return damage_; }
@@ -31,4 +33,5 @@ private:
     const Entity* target;
     int hit_duration_f_ = 10;
     int hit_f_num_ = 0;
+    sf::Vector2f knock_back_v_ = {0, 0};
 };

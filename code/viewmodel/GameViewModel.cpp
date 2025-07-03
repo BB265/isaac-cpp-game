@@ -81,7 +81,7 @@ void GameViewModel::update() {
                 if (entity->getType() == EntityType::Bullet) {
                     const Bullet* bullet = static_cast<const Bullet*>(entity.get());
                     return !bullet->isValid();
-                } else if (entity->getType() == EntityType::Enemy) {
+                } else if (entity->getType() == EntityType::Enemy || entity->getType() == EntityType::EnemyHit) {
                     const Enemy* enemy = static_cast<const Enemy*>(entity.get());
                     return !enemy->isAlive();
                 }

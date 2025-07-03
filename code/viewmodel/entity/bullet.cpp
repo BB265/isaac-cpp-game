@@ -54,6 +54,7 @@ void Bullet::collideWith(Entity* other) {
         int health = enemy->getHealth();
         enemy->setHealth(health - damage_);
         enemy->setType(EntityType::EnemyHit);
+        enemy->knockBack(this);
         broken_ = true;
         setType(EntityType::BulletBroken);
     }
