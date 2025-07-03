@@ -49,8 +49,7 @@ void Bullet::update() {
 
 void Bullet::collideWith(Entity* other) {
     if (broken_) return;
-    if (other->getType() == EntityType::Enemy) {
-        Enemy* enemy = static_cast<Enemy*>(other);
+    if (Enemy *enemy = dynamic_cast<Enemy*>(other)) {
         int health = enemy->getHealth();
         enemy->setHealth(health - damage_);
         enemy->setType(EntityType::EnemyHit);

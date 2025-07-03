@@ -31,14 +31,30 @@ void Enemy::update() {
 }
 
 void Enemy::collideWith(Entity* entity) {
-    if (entity->getType() == EntityType::Player) {
-        Player* player = static_cast<Player*>(entity);
+    if (Player* player = dynamic_cast<Player*>(entity)) {
         if (player->isInvincible()) {
             return;
         }
         int health = player->getHealth();
         player->setHealth(health - damage_);
         player->setType(EntityType::PlayerHit);
+    } else if (Enemy* enemy = dynamic_cast<Enemy*>(entity)) {
+        float dx = getX() - enemy->getX();
+        float dy = getY() - enemy->getY();
+        float distanceSq = dx * dx + dy * dy;
+
+        float minDist = ENEMY_WIDTH / 2.f;
+        float minDistSq = minDist * minDist;
+
+        if (distanceSq < minDistSq && distanceSq > 0.0001f) {
+            float distance = std::sqrt(distanceSq);
+            float overlap = minDist - distance;
+            float nx = dx / distance;
+            float ny = dy / distance;
+
+            setX(getX() + nx * overlap);
+            setY(getY() + ny * overlap);
+        }
     }
 }
 
