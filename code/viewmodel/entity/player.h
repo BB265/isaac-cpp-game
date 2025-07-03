@@ -54,7 +54,7 @@ private:
     int damage_ = 1;
     sf::Clock clock_;
     sf::Time shoot_cd_ = sf::seconds(0.5);
-    sf::Time last_shoot_ = sf::Time::Zero;
+    sf::Time last_shoot_ = sf::seconds(-1);
     sf::Time invincible_cd_ = sf::seconds(1);
     sf::Time last_invincible_ = sf::Time::Zero;
 };

@@ -36,12 +36,13 @@ void GameViewModel::update() {
     }
 
     // 2. 碰撞检测
-    for(auto entity1 : m_entities) 
+    for(auto entity1 : m_entities) {
         for (auto entity2 : m_entities) {
             if (entity1 != entity2 && entity1->getBounds().findIntersection(entity2->getBounds())) {
                 entity1->collideWith(entity2.get());
             }
         }
+    }
 
 	// 3. 删除无效实体
     m_entities.erase(

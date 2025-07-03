@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 #include "../code/view/gameview.h"
 
-// ²âÊÔ¹¹Ôìº¯ÊýÊÇ·ñÕýÈ·³õÊ¼»¯´°¿Ú
+// ï¿½ï¿½ï¿½Ô¹ï¿½ï¿½ìº¯ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½È·ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 TEST(GameViewTest, ConstructorTest) {
     gamewindow window;
     EXPECT_TRUE(window.window.isOpen());
 }
 
-// ²âÊÔ AssetManager µÄÎÆÀí¼ÓÔØ
+// ï¿½ï¿½ï¿½ï¿½ AssetManager ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 TEST(AssetManagerTest, TextureLoadingTest) {
     AssetManager& manager = AssetManager::get_instance();
     const auto textures = manager.get_textures();
@@ -18,10 +18,10 @@ TEST(AssetManagerTest, TextureLoadingTest) {
     EXPECT_NE(textures.find("empty_heart"), textures.end());
     EXPECT_NE(textures.find("enemy"), textures.end());
     EXPECT_NE(textures.find("tear"), textures.end());
-    EXPECT_NE(textures.find("background"), textures.end());
+    EXPECT_NE(textures.find("room"), textures.end());
 }
 
-// ²âÊÔ·½ÏòÅÐ¶Ïº¯Êý
+// ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½Ð¶Ïºï¿½ï¿½ï¿½
 TEST(GameViewTest, JudgeDirectionTest) {
     gamewindow window;
     EXPECT_EQ(window.judgeDirection(1, 1), Direction::None);

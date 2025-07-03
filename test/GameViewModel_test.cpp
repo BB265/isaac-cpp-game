@@ -41,7 +41,9 @@ TEST_F(GameViewModelTest, PlayerMovement) {
 
     // 向右移动
     gameViewModel.executeCommand(CommandType::MoveCommand, std::make_any<std::tuple<Direction>>(Direction::Right));
-    gameViewModel.update();
+    for (int i = 0; i < 10; ++i) {
+        gameViewModel.update();
+    }
 
     // 验证玩家的 X 坐标是否发生了变化
     EXPECT_GT(player->getX(), initialX);
