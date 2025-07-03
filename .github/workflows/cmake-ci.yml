@@ -23,7 +23,7 @@ jobs:
     - name: Install Base Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build g++ cmake
+        sudo apt-get install -y ninja-build g++ cmake libudev-dev libx11-dev libxi-dev libxrandr-dev libxcursor-dev libgl1-mesa-dev
 
     # 设置 Vcpkg
     - name: Setup Vcpkg
