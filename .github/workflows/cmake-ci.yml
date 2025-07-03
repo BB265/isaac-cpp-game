@@ -3,34 +3,35 @@ name: CMake CI
 on:
   push:
     branches:
-    - main
-    - develop
+      - main
+      - develop
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     env:
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg  # 设置Vcpkg环境变量
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg  # 设置 Vcpkg 环境变量
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     # 安装基础依赖
     - name: Install Base Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build g++
-        
+        sudo apt-get install -y ninja-build g++ cmake
+
     # 设置 Vcpkg
     - name: Setup Vcpkg
       run: |
         git clone https://github.com/Microsoft/vcpkg.git
         ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
         echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
-        
+
     # 缓存 Vcpkg 安装以加速后续构建
     - name: Cache Vcpkg dependencies
       uses: actions/cache@v3
@@ -38,20 +39,30 @@ jobs:
       with:
         path: ${{ env.VCPKG_ROOT }}/installed
         key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
-        
+
     # 安装项目依赖
     - name: Install dependencies
-      run: ./vcpkg/vcpkg install
+      run: ./vcpkg/vcpkg install --debug
 
-    # 配置和构建项目
-    - name: Configure with CMake Preset
-      run: cmake --preset=default
+    # 缓存 CMake 构建目录
+    - name: Cache CMake Build Directory
+      uses: actions/cache@v3
+      id: cache-cmake
+      with:
+        path: build
+        key: ${{ runner.os }}-cmake-build-${{ hashFiles('CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-cmake-build-
 
-    - name: Build Project
+    # 配置并构建 Debug 版本
+    - name: Configure Debug Build
+      run: cmake --preset=default -DCMAKE_BUILD_TYPE=Debug
+
+    - name: Build Debug Version
       run: cmake --build --preset=default
 
     # 运行测试
     - name: Run Tests
       run: |
         cd build
-        ./isaac_tests  # 直接运行测试可执行文件
+        ctest --output-on-failure
