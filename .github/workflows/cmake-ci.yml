@@ -1,0 +1,57 @@
+name: CMake CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg  # 设置Vcpkg环境变量
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # 安装基础依赖
+    - name: Install Base Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build g++
+        
+    # 设置 Vcpkg
+    - name: Setup Vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
+        
+    # 缓存 Vcpkg 安装以加速后续构建
+    - name: Cache Vcpkg dependencies
+      uses: actions/cache@v3
+      id: cache-vcpkg
+      with:
+        path: ${{ env.VCPKG_ROOT }}/installed
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+        
+    # 安装项目依赖
+    - name: Install dependencies
+      run: ./vcpkg/vcpkg install --triplet=${{ matrix.triplet }}
+      env:
+        triplet: x64-linux  # Linux 平台使用 x64-linux triplet
+
+    # 配置和构建项目
+    - name: Configure with CMake Preset
+      run: cmake --preset=default
+
+    - name: Build Project
+      run: cmake --build --preset=default
+
+    # 运行测试
+    - name: Run Tests
+      run: |
+        cd build
+        ./isaac_tests  # 直接运行测试可执行文件
