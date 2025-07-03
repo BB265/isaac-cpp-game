@@ -10,6 +10,7 @@ file(GLOB SOURCES
     "code/common/*.cpp"
     "code/viewmodel/*.cpp"
     "code/viewmodel/entity/*.cpp"
+    "code/viewmodel/room/*.cpp"
     "code/app/*.cpp"
 )
 add_executable(isaac_game ${SOURCES} "code/main.cpp" )
@@ -20,6 +21,7 @@ target_include_directories(isaac_game PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/code/common
     ${CMAKE_CURRENT_SOURCE_DIR}/code/viewmodel
     ${CMAKE_CURRENT_SOURCE_DIR}/code/viewmodel/entity
+    ${CMAKE_CURRENT_SOURCE_DIR}/code/viewmodel/room
     ${CMAKE_CURRENT_SOURCE_DIR}/code/app
 )
 
@@ -48,6 +50,7 @@ target_include_directories(isaac_tests PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/code/common
     ${CMAKE_CURRENT_SOURCE_DIR}/code/viewmodel
     ${CMAKE_CURRENT_SOURCE_DIR}/code/viewmodel/entity
+    ${CMAKE_CURRENT_SOURCE_DIR}/code/viewmodel/room
     ${CMAKE_CURRENT_SOURCE_DIR}/code/app
     ${TEST_DIR}
 )
