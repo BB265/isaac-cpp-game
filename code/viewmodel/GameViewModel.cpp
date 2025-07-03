@@ -93,7 +93,7 @@ void GameViewModel::update() {
 	// 4. 房间切换逻辑：消灭所有敌人（+进入下一关的门 未实现）
     bool enemies_cleared = true;
     for (const auto& entity : m_entities) {
-        if (entity->getType() == EntityType::Enemy) {
+        if (dynamic_cast<const Enemy*>(entity.get())) {
             enemies_cleared = false;
             break;
         }
