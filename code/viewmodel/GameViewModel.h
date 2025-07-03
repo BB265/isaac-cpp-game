@@ -16,6 +16,7 @@
 #include "entity/player.h"
 #include "entity/enemy.h"
 #include "entity/bullet.h"
+#include "room/room.h"
 
 class GameViewModel : public Subject, public std::enable_shared_from_this<GameViewModel> {
 public:
@@ -34,10 +35,14 @@ public:
 	void moveCommand(Direction dir);
 	void shootCommand(Direction dir);
 	void startGameCommand();
+	void loadRoom(int room_index);
 
 private:
 	std::vector<std::shared_ptr<Entity>> m_entities;
 	Player* m_player_ptr;  // 玩家实体
 
 	std::unordered_map<CommandType, std::shared_ptr<ICommandBase>> m_commands;  // 命令映射表
+
+	std::vector<Room> m_map; // 存储当前关卡的房间序列
+	int m_current_room_index = -1;
 };

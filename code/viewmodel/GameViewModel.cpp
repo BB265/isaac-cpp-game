@@ -18,15 +18,45 @@ void GameViewModel::startNewGame() {
 	m_player_ptr = player.get();
 	m_entities.push_back(std::move(player));
 
-	// 3. 创建敌人实体
-    auto enemy = std::make_shared<Enemy>(100.f, 100.f, m_player_ptr);
-    enemy->setHealth(2);
-    enemy->setSpeed(1);
-    enemy->setDamage(1);
-    m_entities.push_back(std::move(enemy));
+	// 3. 生成随机的地图
+    auto& roomFactory = RoomFactory::getInstance();
+    for (int i = 0; i < 5; ++i) { // 创建一个包含5个房间的地图
+        m_map.push_back(roomFactory.getRandomRoom());
+    }
 
-    // 4. 发布一个“游戏开始”的事件
+	// 4. 加载第一个房间
+    loadRoom(0);
+
+    // 5. 发布一个“游戏开始”的事件
     notify(GameEvent::GAME_STARTED);
+}
+
+void GameViewModel::loadRoom(int room_index) {
+    if (room_index < 0 || room_index >= m_map.size()) {
+        return;
+    }
+    m_current_room_index = room_index;
+
+    // 1. 清除所有非玩家实体
+    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(),
+        [this](const std::shared_ptr<Entity>& entity) {
+            return entity.get() != m_player_ptr;
+        }),
+        m_entities.end());
+
+    // 2. 获取当前房间的模板
+    const auto& currentRoom = m_map[m_current_room_index];
+
+    // 3. 创建敌人
+    for (const auto& spawnPoint : currentRoom.getEnemySpawnPoints()) {
+        sf::Vector2f pixelPos = Grid::getPixelPosition(spawnPoint.gridX, spawnPoint.gridY);
+
+        auto enemy = std::make_shared<Enemy>(pixelPos.x, pixelPos.y, m_player_ptr);
+        enemy->setHealth(2);
+        enemy->setSpeed(1);
+        enemy->setDamage(1);
+        m_entities.push_back(std::move(enemy));
+    }
 }
 
 void GameViewModel::update() {
@@ -60,7 +90,20 @@ void GameViewModel::update() {
         m_entities.end()
     );
 
-    // 4. 发布一个“玩家死亡”的事件
+	// 4. 房间切换逻辑：消灭所有敌人（+进入下一关的门 未实现）
+    bool enemies_cleared = true;
+    for (const auto& entity : m_entities) {
+        if (entity->getType() == EntityType::Enemy) {
+            enemies_cleared = false;
+            break;
+        }
+    }
+
+    if (enemies_cleared && m_current_room_index < m_map.size() - 1) {
+         loadRoom(m_current_room_index + 1);
+    }
+
+    // 5. 发布一个“玩家死亡”的事件
     if (m_player_ptr && !m_player_ptr->isAlive()) {
         notify(GameEvent::PLAYER_DIED);
     }
