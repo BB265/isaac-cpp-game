@@ -8,7 +8,9 @@ gamewindow::gamewindow() {
             sprites.emplace(p.first, sf::Sprite((*p.second)));
         }
     }
-    sprites.find("isaac")->second.setPosition(sf::Vector2f(400, 300)); // default position
+    sprites.find("isaac")->second.setPosition(sf::Vector2f(400, 300));
+    sprites.find("door")->second.setPosition(sf::Vector2f(380, 30));// default position
+    sprites.find("door")->second.setScale(sf::Vector2f(1.5, 1.5));
     sprites.find("isaac")->second.setScale(sf::Vector2f(1.5, 1.5));
     sprites.find("enemy")->second.setScale(sf::Vector2f(1.5, 1.5));
     sprites.find("enemy_hitted")->second.setScale(sf::Vector2f(1.5, 1.5));
@@ -25,6 +27,7 @@ gamewindow::gamewindow() {
 void gamewindow::draw_and_display() {
     window.draw(sprites.find("background")->second);
     if (actors != nullptr) {
+        window.draw(sprites.find("door")->second);
         const std::vector<std::shared_ptr<Entity>> _actors = *actors;
         for (auto p : _actors) {
             float x = p->getX(), y = p->getY();
