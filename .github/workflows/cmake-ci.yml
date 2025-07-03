@@ -23,8 +23,13 @@ jobs:
     - name: Install Base Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build g++ cmake libudev-dev libx11-dev libxi-dev libxrandr-dev libxcursor-dev libgl1-mesa-dev
+        sudo apt-get install -y ninja-build g++ cmake libudev-dev libx11-dev libxi-dev libxrandr-dev libxcursor-dev libgl1-mesa-dev xvfb xauth
 
+    - name: Start XVFB server
+      uses: GabrielBB/xvfb-action@v1  # 推荐使用维护更活跃的Action
+      with:
+        run: echo "XVFB started"
+    
     # 设置 Vcpkg
     - name: Setup Vcpkg
       run: |
@@ -65,4 +70,5 @@ jobs:
     - name: Run Tests
       run: |
         cd build
-        ctest --output-on-failure
+        bash -c "xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
+        ctest --output-on-failure"

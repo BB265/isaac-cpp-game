@@ -39,6 +39,15 @@ void Player::update() {
         setY(ROOM_BOTTOM - PLAYER_HEIGHT);
         cur_velocity_.y = 0;
     }
+
+    // 设置受击效果
+    if (getType() == EntityType::PlayerHit) {
+        hit_f_num_++;
+        if (hit_f_num_ == hit_duration_f_) {
+            hit_f_num_ = 0;
+            setType(EntityType::Player);
+        }
+    }
 }
 
 void Player::setDirection(Direction direction) {

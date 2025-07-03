@@ -6,8 +6,11 @@
 
 enum class EntityType {
     Player,
+    PlayerHit,
     Bullet,
+    BulletBroken,
     Enemy,
+    EnemyHit,
 };
 
 class Entity {
@@ -15,6 +18,7 @@ public:
     Entity(float x, float y, EntityType type) : x_(x), y_(y), type_(type) {}
     virtual ~Entity() = default;
     EntityType getType() const { return type_; }
+    void setType(EntityType type) { type_ = type; }
     float getX() const { return x_; }
     float getY() const { return y_; }
     void setX(float x) { x_ = x; }

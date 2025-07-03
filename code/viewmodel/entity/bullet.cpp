@@ -18,27 +18,43 @@ Bullet::Bullet(float x, float y, const Player* owner, int damage, int speed, Dir
 }
 
 void Bullet::update() {
+    if (broken_) {
+        hit_f_num_++;
+        if (hit_f_num_ >= hit_duration_f_) {
+            hit_f_num_ = 0;
+            is_valid_ = false;
+            setType(EntityType::Bullet);
+        }
+        return;
+    }
     setX(getX() + velocity_.x);
     setY(getY() + velocity_.y);
 
     // 处理边界
     if (getX() < ROOM_LEFT) {
-        is_valid_ = false;
+        broken_ = true;
+        setType(EntityType::BulletBroken);
     } else if (getX() > ROOM_RIGHT - BULLET_WIDTH) {
-        is_valid_ = false;
+        broken_ = true;
+        setType(EntityType::BulletBroken);
     }
     if (getY() < ROOM_TOP) {
-        is_valid_ = false;
+        broken_ = true;
+        setType(EntityType::BulletBroken);
     } else if (getY() > ROOM_BOTTOM - BULLET_HEIGHT) {
-        is_valid_ = false;
+        broken_ = true;
+        setType(EntityType::BulletBroken);
     }
 }
 
 void Bullet::collideWith(Entity* other) {
+    if (broken_) return;
     if (other->getType() == EntityType::Enemy) {
         Enemy* enemy = static_cast<Enemy*>(other);
         int health = enemy->getHealth();
         enemy->setHealth(health - damage_);
-        is_valid_ = false;
+        enemy->setType(EntityType::EnemyHit);
+        broken_ = true;
+        setType(EntityType::BulletBroken);
     }
 }

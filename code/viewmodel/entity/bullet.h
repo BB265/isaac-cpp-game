@@ -21,5 +21,8 @@ private:
     int damage_;
     float speed_;
     sf::Vector2f velocity_;
+    bool broken_ = false;
     bool is_valid_ = true;
+    int hit_duration_f_ = 20;
+    int hit_f_num_ = 0;
 };
