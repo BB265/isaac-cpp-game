@@ -3,8 +3,6 @@
 #include "player.h"
 #include "common/Direction.h"
 
-#include <cmath>
-
 class Bullet : public Entity {
 public:
     Bullet(float x, float y, const Player* owner, int damage, int speed, Direction initial_dir);

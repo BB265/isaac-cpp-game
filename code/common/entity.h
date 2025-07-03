@@ -2,6 +2,7 @@
 #include "common/MetaData.h"
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System.hpp>
+#include <cmath>
 
 enum class EntityType {
     Player,
