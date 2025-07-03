@@ -31,6 +31,7 @@ public:
 	void draw_issac(float x, float y);
 	void draw_enemy(float x, float y);
 	void draw_tears(float x, float y);
+	void draw_enemyhit(float x, float y);
 	void set_actors(const std::vector<std::shared_ptr<Entity>>* _actors) {
 		actors = _actors;
 	}

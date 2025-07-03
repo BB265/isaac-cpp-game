@@ -28,7 +28,7 @@ public:
 		load_texture("empty_heart", "../code/assets/empty_heart.png");
 		load_texture("heart", "../code/assets/heart.png");
 		load_texture("enemy", "../code/assets/enemy.png");
-		load_texture("enemy_hiited", "../code/assets/enemy_hitted.png");
+		load_texture("enemy_hitted", "../code/assets/enemy_hitted.png");
 		load_texture("tear", "../code/assets/tear.png");
 	}
 private:

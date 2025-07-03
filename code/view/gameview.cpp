@@ -11,6 +11,7 @@ gamewindow::gamewindow() {
     sprites.find("isaac")->second.setPosition(sf::Vector2f(400, 300)); // default position
     sprites.find("isaac")->second.setScale(sf::Vector2f(1.5, 1.5));
     sprites.find("enemy")->second.setScale(sf::Vector2f(1.5, 1.5));
+    sprites.find("enemy_hitted")->second.setScale(sf::Vector2f(1.5, 1.5));
     sprites.find("heart")->second.setScale(sf::Vector2f(3.f, 3.f ));// set heart scale
     sprites.find("half_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
     sprites.find("empty_heart")->second.setScale(sf::Vector2f(3.f, 3.f));
@@ -35,6 +36,9 @@ void gamewindow::draw_and_display() {
             }
             else if (p->getType() == EntityType::Bullet) {
                 draw_tears(x, y);
+            }
+            else if (p->getType() == EntityType::EnemyHit) {
+                draw_enemyhit(x, y);
             }
         }
     }
@@ -72,6 +76,10 @@ void gamewindow::draw_enemy(float x, float y) {
 void gamewindow::draw_tears(float x, float y) {
     sprites.find("tear")->second.setPosition(sf::Vector2f(x, y));
     window.draw(sprites.find("tear")->second);
+}
+void gamewindow::draw_enemyhit(float x, float y) {
+    sprites.find("enemy_hitted")->second.setPosition(sf::Vector2f(x, y));
+    window.draw(sprites.find("enemy_hitted")->second);
 }
 void gamewindow::run() {
     while (window.isOpen())
