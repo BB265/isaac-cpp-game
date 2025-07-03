@@ -57,4 +57,6 @@ private:
     sf::Time last_shoot_ = sf::seconds(-1);
     sf::Time invincible_cd_ = sf::seconds(1);
     sf::Time last_invincible_ = sf::Time::Zero;
+    int hit_duration_f_ = 10;
+    int hit_f_num_ = 0;
 };

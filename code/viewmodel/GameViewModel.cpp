@@ -12,7 +12,7 @@ void GameViewModel::startNewGame() {
     m_player_ptr = nullptr;
 
 	// 2. 创建玩家实体
-	auto player = std::make_shared<Player>(400.f, 300.f, 5.f);
+	auto player = std::make_shared<Player>(400.f, 300.f, 6.f);
 	player->setMaxHealth(6);
 	player->setHealth(6);
 	m_player_ptr = player.get();

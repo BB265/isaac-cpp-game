@@ -29,4 +29,6 @@ private:
     int damage_ = 1;
     float speed_ = 1;
     const Entity* target;
+    int hit_duration_f_ = 10;
+    int hit_f_num_ = 0;
 };
