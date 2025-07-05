@@ -83,10 +83,10 @@ isaac-cpp-game/
 ├── .github/workflows/      # CI/CD 配置文件
 ├── code/
 │   ├── app/                # 应用主逻辑
-│   ├── assets/             # 游戏资源 (图片、音效等)
-│   ├── common/             # 通用组件 (实体、命令、事件系统等)
-│   ├── view/               # 视图层 (SFML 窗口和渲染)
-│   └── viewmodel/          # 视图模型层 (游戏逻辑)
+│   ├── assets/             # 游戏资源
+│   ├── common/             # 通用组件
+│   ├── view/               # View层
+│   └── viewmodel/          # ViewModel层
 ├── test/                   # 测试代码
 ├── CMakeLists.txt          # CMake 构建脚本
 ├── vcpkg.json              # vcpkg 依赖配置文件
@@ -101,4 +101,6 @@ isaac-cpp-game/
 
 本项目采用 MIT 许可证。
 
+
+注：本文档的部分内容是在 AI 语言模型的辅助下润色的。
 -----
