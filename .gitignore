@@ -43,7 +43,10 @@
 # Ignore Visual Studio user-specific files
 .vs/
 .vscode/
-
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
 # Ignore build
 build/
 
@@ -52,5 +55,7 @@ CMakeUserPresets.json
 
 # Ignore vcpkg
 vcpkg_installed/
-
+# ignore cmakefile
+CMakeFiles/
+#Ignore md
 *.md

@@ -12,16 +12,51 @@ void GameViewModel::startNewGame() {
     m_player_ptr = nullptr;
 
 	// 2. 创建玩家实体
-	auto player = std::make_shared<Player>(400, 300, 5);
+	auto player = std::make_shared<Player>(400.f, 300.f, 6.f);
 	player->setMaxHealth(6);
 	player->setHealth(6);
 	m_player_ptr = player.get();
 	m_entities.push_back(std::move(player));
 
-	// 3. 创建敌人实体
+	// 3. 生成随机的地图
+    auto& roomFactory = RoomFactory::getInstance();
+    for (int i = 0; i < 5; ++i) { // 创建一个包含5个房间的地图
+        m_map.push_back(roomFactory.getRandomRoom());
+    }
 
-    // 4. 发布一个“游戏开始”的事件
+	// 4. 加载第一个房间
+    loadRoom(0);
+
+    // 5. 发布一个“游戏开始”的事件
     notify(GameEvent::GAME_STARTED);
+}
+
+void GameViewModel::loadRoom(int room_index) {
+    if (room_index < 0 || room_index >= m_map.size()) {
+        return;
+    }
+    m_current_room_index = room_index;
+
+    // 1. 清除所有非玩家实体
+    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(),
+        [this](const std::shared_ptr<Entity>& entity) {
+            return entity.get() != m_player_ptr;
+        }),
+        m_entities.end());
+
+    // 2. 获取当前房间的模板
+    const auto& currentRoom = m_map[m_current_room_index];
+
+    // 3. 创建敌人
+    for (const auto& spawnPoint : currentRoom.getEnemySpawnPoints()) {
+        sf::Vector2f pixelPos = Grid::getPixelPosition(spawnPoint.gridX, spawnPoint.gridY);
+
+        auto enemy = std::make_shared<Enemy>(pixelPos.x, pixelPos.y, m_player_ptr);
+        enemy->setHealth(2);
+        enemy->setSpeed(1);
+        enemy->setDamage(1);
+        m_entities.push_back(std::move(enemy));
+    }
 }
 
 void GameViewModel::update() {
@@ -31,6 +66,13 @@ void GameViewModel::update() {
     }
 
     // 2. 碰撞检测
+    for(auto entity1 : m_entities) {
+        for (auto entity2 : m_entities) {
+            if (entity1 != entity2 && entity1->getBounds().findIntersection(entity2->getBounds())) {
+                entity1->collideWith(entity2.get());
+            }
+        }
+    }
 
 	// 3. 删除无效实体
     m_entities.erase(
@@ -39,12 +81,32 @@ void GameViewModel::update() {
                 if (entity->getType() == EntityType::Bullet) {
                     const Bullet* bullet = static_cast<const Bullet*>(entity.get());
                     return !bullet->isValid();
+                } else if (entity->getType() == EntityType::Enemy || entity->getType() == EntityType::EnemyHit) {
+                    const Enemy* enemy = static_cast<const Enemy*>(entity.get());
+                    return !enemy->isAlive();
                 }
                 return false;
             }),
         m_entities.end()
     );
 
+	// 4. 房间切换逻辑：消灭所有敌人（+进入下一关的门 未实现）
+    bool enemies_cleared = true;
+    for (const auto& entity : m_entities) {
+        if (dynamic_cast<const Enemy*>(entity.get())) {
+            enemies_cleared = false;
+            break;
+        }
+    }
+
+    if (enemies_cleared && m_current_room_index < m_map.size() - 1) {
+         loadRoom(m_current_room_index + 1);
+    }
+
+    // 5. 发布一个“玩家死亡”的事件
+    if (m_player_ptr && !m_player_ptr->isAlive()) {
+        notify(GameEvent::PLAYER_DIED);
+    }
 }
 
 const Player* GameViewModel::getPlayer() const {
@@ -114,6 +176,10 @@ void GameViewModel::shootCommand(Direction dir) {
     notify(GameEvent::PLAY_SOUND_SHOOT);
 }
 
+void GameViewModel::startGameCommand() {
+    startNewGame();
+}
+
 void GameViewModel::registerAllCommands() {
     // UpdateCommand
     registerCommand(
@@ -129,4 +195,9 @@ void GameViewModel::registerAllCommands() {
     registerCommand(
         CommandType::ShootCommand,
         std::make_shared<Command<Direction>>([this](Direction dir) { shootCommand(dir); }));
+
+    // StartGameCommand
+    registerCommand(
+        CommandType::StartGameCommand,
+        std::make_shared<Command<>>([this]() { startGameCommand(); }));
 }

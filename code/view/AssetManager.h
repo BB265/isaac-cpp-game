@@ -20,12 +20,16 @@ public:
 		return m_textures;
 	}
 	AssetManager(){
-		load_texture("background", "../code/assets/room.png");
+		load_texture("room", "../code/assets/room.png");
+		load_texture("main_window", "../code/assets/main_window.png");
+		load_texture("end_window","../code/assets/end_window.png");
 		load_texture("isaac", "../code/assets/isaac.png");
 		load_texture("half_heart", "../code/assets/half_heart.png");
 		load_texture("empty_heart", "../code/assets/empty_heart.png");
 		load_texture("heart", "../code/assets/heart.png");
-		load_texture("enemy", "../code/assets/Champion_Red.png");
+		load_texture("enemy", "../code/assets/enemy1.png");
+		load_texture("enemy_hitted", "../code/assets/enemy1_attacked.png");
+		load_texture("door", "../code/assets/door.png");
 		load_texture("tear", "../code/assets/tear.png");
 	}
 private:
