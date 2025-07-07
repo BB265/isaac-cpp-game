@@ -1,0 +1,74 @@
+name: CMake CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg  # 设置 Vcpkg 环境变量
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 安装基础依赖
+    - name: Install Base Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ninja-build g++ cmake libudev-dev libx11-dev libxi-dev libxrandr-dev libxcursor-dev libgl1-mesa-dev xvfb xauth
+
+    - name: Start XVFB server
+      uses: GabrielBB/xvfb-action@v1  # 推荐使用维护更活跃的Action
+      with:
+        run: echo "XVFB started"
+    
+    # 设置 Vcpkg
+    - name: Setup Vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        echo "VCPKG_ROOT=$GITHUB_WORKSPACE/vcpkg" >> $GITHUB_ENV
+
+    # 缓存 Vcpkg 安装以加速后续构建
+    - name: Cache Vcpkg dependencies
+      uses: actions/cache@v3
+      id: cache-vcpkg
+      with:
+        path: ${{ env.VCPKG_ROOT }}/installed
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json') }}
+
+    # 安装项目依赖
+    - name: Install dependencies
+      run: ./vcpkg/vcpkg install --debug
+
+    # 缓存 CMake 构建目录
+    - name: Cache CMake Build Directory
+      uses: actions/cache@v3
+      id: cache-cmake
+      with:
+        path: build
+        key: ${{ runner.os }}-cmake-build-${{ hashFiles('CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-cmake-build-
+
+    # 配置并构建 Debug 版本
+    - name: Configure Debug Build
+      run: cmake --preset=default -DCMAKE_BUILD_TYPE=Debug
+
+    - name: Build Debug Version
+      run: cmake --build build
+
+    # 运行测试
+    - name: Run Tests
+      run: |
+        cd build
+        bash -c "xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
+        ctest --output-on-failure"
